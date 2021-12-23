@@ -1,0 +1,6 @@
+{"driver":true,"name":"MongoError","index":0,"code":11000,"keyPattern":{"phone":1},"keyValue":{"phone":"01518329044"},"level":"error","service":"doctor-service"}
+{"driver":true,"name":"MongoError","index":0,"code":11000,"keyPattern":{"phone":1},"keyValue":{"phone":"01518329044"},"level":"error","service":"doctor-service"}
+{"level":"error","service":"doctor-service"}
+{"code":"ERR_HTTP_HEADERS_SENT","level":"error","service":"doctor-service"}
+{"code":"ERR_HTTP_HEADERS_SENT","level":"error","service":"doctor-service"}
+{"code":"ERR_HTTP_HEADERS_SENT","level":"error","service":"doctor-service"}
