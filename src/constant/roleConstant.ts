@@ -1,0 +1,10 @@
+const ROLE = {
+    PATIENT_ROLE: 1,
+    HOMEOPATHY_DOCTOR_ROLE: 2,
+    ALLOPATH_DOCTOR_ROLE: 3,
+    AYURVEDIC_DOCTOR_ROLE:4,
+    HOSPITAL_ROLE: 4,
+    ADMIN_ROLE: 9
+}
+
+export default ROLE;
