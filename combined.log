@@ -4,3 +4,4 @@
 {"code":"ERR_HTTP_HEADERS_SENT","level":"error","service":"doctor-service"}
 {"code":"ERR_HTTP_HEADERS_SENT","level":"error","service":"doctor-service"}
 {"code":"ERR_HTTP_HEADERS_SENT","level":"error","service":"doctor-service"}
+{"errors":{"tag_id":{"stringValue":"\"m-yt\"","valueType":"string","kind":"Number","value":"m-yt","path":"tag_id","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"m-yt\" (type string) at path \"tag_id\""}},"_message":"Tag validation failed","level":"error","service":"doctor-service","name":"ValidationError","message":"Tag validation failed: tag_id: Cast to Number failed for value \"m-yt\" (type string) at path \"tag_id\""}
