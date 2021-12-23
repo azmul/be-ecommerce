@@ -11,7 +11,7 @@ export async function getAllTagsHandler(req: Request, res: Response) {
   const { last_id } = req.query;
 
   let query: any = {};
-  let countQuery: any = {};
+  let countQuery: any = {is_active: true};
 
   if (last_id) {
     query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
@@ -56,11 +56,11 @@ export async function createTagHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const { name } = req.body;
-  if (!name) res.status(400).send({ status: 400, message: "Name is required" });
+  const { name, name_local } = req.body;
+  if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
-    let tag = new Tag({name, tag_id: Math.floor(Math.random() * 999)});
+    let tag = new Tag({name, name_local, number_id: Math.floor(Math.random() * 999)});
     await tag.save();
     res.status(201).send({ message: "Tag Created", status: 201 });
   } catch (err: any) {
@@ -74,10 +74,11 @@ export async function updateTagHandler(
   res: Response
 ) {
   const id = req.params.id;
-  const { name } = req.body;
+  const { name, name_local } = req.body;
+  if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
-    const tag = await Tag.findByIdAndUpdate(id, { name });
+    const tag = await Tag.findByIdAndUpdate(id, { name, name_local });
     if (!tag)
       return res.status(404).send("The Tag with the given id was not found");
 

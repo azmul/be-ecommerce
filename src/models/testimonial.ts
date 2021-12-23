@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 export interface TestimonialsDocument extends mongoose.Document {
   title: string;
-  subtitle: string;
+  title_local: string;
+  content: string;
+  content_local: string;
   image: string;
   url: string;
   is_active: boolean;
@@ -15,9 +17,17 @@ const testimonialSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    title_local: {
+      type: String,
+      default: null,
+    },
     content: {
         type: String,
         default: null,
+    },
+    content_local: {
+      type: String,
+      default: null,
     },
     image: {
         type: String,

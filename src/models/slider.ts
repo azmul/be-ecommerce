@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 export interface SlidersDocument extends mongoose.Document {
   title: string;
+  title_local: string;
   subtitle: string;
+  subtitle_local: string;
   image: string;
   url: string;
   is_active: boolean;
@@ -15,9 +17,17 @@ const sliderSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    title_local: {
+      type: String,
+      default: null,
+    },
     subtitle: {
         type: String,
         default: null,
+    },
+    subtitle_local: {
+      type: String,
+      default: null,
     },
     image: {
         type: String,

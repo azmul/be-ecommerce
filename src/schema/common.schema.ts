@@ -49,34 +49,30 @@ export const changePasswordSchema = object({
 export const sliderSchema = object({
   body: object({
     title: string()
-      .required("title is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "title can only contain Latin letters."),
+      .required("title is required"),
+    title_local: string().required("title is required"),
     subtitle: string()
-      .required("subtitle is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "subtitle can only contain Latin letters."),
+      .required("subtitle is required"),
+    subtitle_local: string().required("subtitle is required"),
     image: string()
-      .required("image is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "image can only contain Latin letters."),
+      .required("image is required"),
     url: string()
-      .required("url is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "url can only contain Latin letters."),
+      .required("url is required"),
   }),
 });
 
 export const testimonialSchema = object({
   body: object({
     title: string()
-      .required("title is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "title can only contain Latin letters."),
+      .required("title is required"),
+    title_local: string().required("title is required"),
     customerName: string()
-      .required("subtitle is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "subtitle can only contain Latin letters."),
+      .required("subtitle is required"),
     image: string()
-      .required("image is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "image can only contain Latin letters."),
+      .required("image is required"),
     content: string()
-      .required("url is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "url can only contain Latin letters."),
+      .required("url is required"),
+    content_local: string().required("url is required"),
   }),
 });
 

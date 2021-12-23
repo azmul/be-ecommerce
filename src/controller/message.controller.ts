@@ -56,10 +56,8 @@ export async function createMessageHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const { name, phone, message } = req.body;
-
   try {
-    let item = new Message({name, phone, message });
+    let item = new Message({...req.body });
     await item.save();
     res.status(201).send({ message: "Message Created", status: 201 });
   } catch (err: any) {

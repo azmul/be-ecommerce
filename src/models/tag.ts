@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 export interface TagDocument extends mongoose.Document {
   name: string;
+  name_local: string;
   number_id: number;
   is_active: boolean;
   createdAt: Date;
@@ -9,6 +10,10 @@ export interface TagDocument extends mongoose.Document {
 
 const tagSchema = new mongoose.Schema({
     name: {
+        type: String,
+        default: null,
+    },
+    name_local: {
         type: String,
         default: null,
     },

@@ -11,7 +11,7 @@ export async function getAllCategorysHandler(req: Request, res: Response) {
   const { last_id } = req.query;
 
   let query: any = {};
-  let countQuery: any = {};
+  let countQuery: any = {is_active: true};
 
   if (last_id) {
     query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
@@ -56,11 +56,11 @@ export async function createCategoryHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const { name } = req.body;
-  if (!name) res.status(400).send({ status: 400, message: "Name is required" });
+  const { name, name_local } = req.body;
+  if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
-    let category = new Category({name, category_id: Math.floor(Math.random() * 999)});
+    let category = new Category({name, name_local, number_id: Math.floor(Math.random() * 999)});
     await category.save();
     res.status(201).send({ message: "category Created", status: 201 });
   } catch (err: any) {
@@ -74,10 +74,11 @@ export async function updateCategoryHandler(
   res: Response
 ) {
   const id = req.params.id;
-  const { name } = req.body;
+  const { name, name_local } = req.body;
+  if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
-    const category = await Category.findByIdAndUpdate(id, { name });
+    const category = await Category.findByIdAndUpdate(id, { name, name_local });
     if (!category)
       return res.status(404).send("The category with the given id was not found");
 

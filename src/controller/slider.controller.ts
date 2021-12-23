@@ -11,7 +11,7 @@ export async function getAllSlidersHandler(req: Request, res: Response) {
   const { last_id } = req.query;
 
   let query: any = {};
-  let countQuery: any = {};
+  let countQuery: any = {is_active: true};
 
   if (last_id) {
     query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
@@ -56,10 +56,8 @@ export async function createSliderHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const { title, subtitle, image, url } = req.body;
-
   try {
-    let slider = new Slider({title, subtitle, image, url });
+    let slider = new Slider({...req.body});
     await slider.save();
     res.status(201).send({ message: "slider Created", status: 201 });
   } catch (err: any) {

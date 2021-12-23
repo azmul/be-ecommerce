@@ -23,7 +23,9 @@ export async function getAllTestimonialsHandler(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const items = await Testimonial.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
+    const items = await Testimonial.find(query).limit(
+      API.DEFAULT_DATA_PER_PAGE
+    );
     const total = await Testimonial.find(countQuery).countDocuments();
 
     res.status(200).send({
@@ -43,7 +45,9 @@ export async function getTestimonialHandler(req: Request, res: Response) {
   try {
     const item = await Testimonial.findById(id);
     if (!item)
-      return res.status(404).send("The Testimonial with the given id was not found");
+      return res
+        .status(404)
+        .send("The Testimonial with the given id was not found");
 
     res.status(200).send(item);
   } catch (err: any) {
@@ -56,10 +60,10 @@ export async function createTestimonialHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const { title, content, image, customerName } = req.body;
-
   try {
-    let item = new Testimonial({title, content, image, customerName });
+    let item = new Testimonial({
+      ...req.body,
+    });
     await item.save();
     res.status(201).send({ message: "Testimonial Created", status: 201 });
   } catch (err: any) {
@@ -77,7 +81,9 @@ export async function updateTestimonialHandler(
   try {
     const item = await Testimonial.findByIdAndUpdate(id, { ...req.body });
     if (!item)
-      return res.status(404).send("The Testimonial with the given id was not found");
+      return res
+        .status(404)
+        .send("The Testimonial with the given id was not found");
 
     res.status(200).send({ message: "Testimonial Updated", data: item });
   } catch (err: any) {
@@ -86,16 +92,22 @@ export async function updateTestimonialHandler(
   }
 }
 
-export async function deleteTestimonialHandler(req: IGetUserAuthInfoRequest, res: Response) {
-    const id = req.params.id;
-  
-    try {
-        const item = await Testimonial.findByIdAndUpdate(id, { is_active: false });
-        if (!item) return res.status(404).send('The Testimonial with the given id was not found');
-        
-        res.status(200).send({ message: "Deactivated"});
-    } catch(err: any){
-      log.error(err);
-      res.status(400).send({status: 400, message: err?.message});
-    }
+export async function deleteTestimonialHandler(
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) {
+  const id = req.params.id;
+
+  try {
+    const item = await Testimonial.findByIdAndUpdate(id, { is_active: false });
+    if (!item)
+      return res
+        .status(404)
+        .send("The Testimonial with the given id was not found");
+
+    res.status(200).send({ message: "Deactivated" });
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
   }
+}
