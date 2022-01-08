@@ -56,6 +56,8 @@ export const sliderSchema = object({
     subtitle_local: string().required("subtitle is required"),
     image: string()
       .required("image is required"),
+    public_id: string()
+      .required("public_id is required"),
     url: string()
       .required("url is required"),
   }),
@@ -66,10 +68,12 @@ export const testimonialSchema = object({
     title: string()
       .required("title is required"),
     title_local: string().required("title is required"),
-    customerName: string()
+    customer_name: string()
       .required("subtitle is required"),
     image: string()
       .required("image is required"),
+    public_id: string()
+      .required("public_id is required"),
     content: string()
       .required("url is required"),
     content_local: string().required("url is required"),

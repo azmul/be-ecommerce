@@ -5,6 +5,7 @@ export interface SlidersDocument extends mongoose.Document {
   subtitle: string;
   subtitle_local: string;
   image: string;
+  public_id: string;
   url: string;
   is_active: boolean;
   createdAt: Date;
@@ -32,6 +33,10 @@ const sliderSchema = new mongoose.Schema(
     image: {
         type: String,
         default: null,
+    },
+    public_id: {
+      type: String,
+      default: null,
     },
     url: {
         type: String,

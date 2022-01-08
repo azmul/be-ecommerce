@@ -17,3 +17,12 @@
 {"ok":0,"code":14,"codeName":"TypeMismatch","name":"MongoError","level":"error","service":"doctor-service"}
 {"ok":0,"code":14,"codeName":"TypeMismatch","name":"MongoError","level":"error","service":"doctor-service"}
 {"ok":0,"code":14,"codeName":"TypeMismatch","name":"MongoError","level":"error","service":"doctor-service"}
+{"code":"ERR_INVALID_ARG_TYPE","level":"error","service":"doctor-service"}
+{"message":"Missing required parameter - file","name":"Error","http_code":400,"level":"error","service":"doctor-service"}
+{"message":{"error":{"errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"api.cloudinary.com"}},"level":"error","service":"doctor-service"}
+{"message":{"error":{"errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"api.cloudinary.com"}},"level":"error","service":"doctor-service"}
+{"message":{"error":{"errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"api.cloudinary.com"}},"level":"error","service":"doctor-service"}
+{"message":{"error":{"errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"api.cloudinary.com"}},"level":"error","service":"doctor-service"}
+{"message":{"error":{"errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"api.cloudinary.com"}},"level":"error","service":"doctor-service"}
+{"message":{"error":{"errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"api.cloudinary.com"}},"level":"error","service":"doctor-service"}
+{"message":{"error":{"message":"Request Timeout","http_code":499,"name":"TimeoutError"}},"level":"error","service":"doctor-service"}
