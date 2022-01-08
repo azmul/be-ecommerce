@@ -3,17 +3,21 @@ import asyncHandler from  'express-async-handler'
 import {admin} from  '../middleware'
 
 import {
-   getAllCategorysHandler,
+   getCategorysHandler,
    getCategoryHandler,
    createCategoryHandler,
    updateCategoryHandler,
    deleteCategoryHandler,
+   getAllCategorysHandler,
 } from "../controller/category.controller"
 
 const router = express.Router();
 
 // Get all Categorys
-router.get('/',  asyncHandler(getAllCategorysHandler));
+router.get('/all',  asyncHandler(getAllCategorysHandler));
+
+// Get Categorys
+router.get('/',  asyncHandler(getCategorysHandler));
 
 // Get a Category
 router.get('/:id', admin, asyncHandler(getCategoryHandler));

@@ -3,17 +3,21 @@ import asyncHandler from  'express-async-handler'
 import {admin} from  '../middleware'
 
 import {
-   getAllTagsHandler,
+   getTagsHandler,
    getTagHandler,
    createTagHandler,
    updateTagHandler,
    deleteTagHandler,
+   getAllTagsHandler,
 } from "../controller/tag.controller"
 
 const router = express.Router();
 
 // Get all tags
-router.get('/',  asyncHandler(getAllTagsHandler));
+router.get('/all',  asyncHandler(getAllTagsHandler));
+
+// Get tags
+router.get('/',  asyncHandler(getTagsHandler));
 
 // Get a tag
 router.get('/:id', admin, asyncHandler(getTagHandler));

@@ -8,6 +8,17 @@ import API from "../constant/apiContant";
 const ObjectId: any = mongodb.ObjectId;
 
 export async function getAllCategorysHandler(req: Request, res: Response) {
+  try {
+    const categorys = await Category.find({is_active: true});
+    res.status(200).send({
+      data: categorys,
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
+export async function getCategorysHandler(req: Request, res: Response) {
   const { last_id } = req.query;
 
   let query: any = {};
