@@ -35,3 +35,11 @@
 {"stringValue":"\"3333\"","valueType":"string","kind":"ObjectId","value":"3333","path":"_id","reason":{},"name":"CastError","message":"Cast to ObjectId failed for value \"3333\" (type string) at path \"_id\" for model \"Product\""}
 {"level":"error","service":"doctor-service"}
 {"level":"error","service":"doctor-service"}
+{"stringValue":"\"NaN\"","valueType":"number","kind":"Number","value":null,"path":"number_id","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"NaN\" (type number) at path \"number_id\" for model \"Product\""}
+{"stringValue":"\"NaN\"","valueType":"number","kind":"Number","value":null,"path":"number_id","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"NaN\" (type number) at path \"number_id\" for model \"Product\""}
+{"stringValue":"\"NaN\"","valueType":"number","kind":"Number","value":null,"path":"number_id","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"NaN\" (type number) at path \"number_id\" for model \"Product\""}
+{"stringValue":"\"NaN\"","valueType":"number","kind":"Number","value":null,"path":"number_id","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"NaN\" (type number) at path \"number_id\" for model \"Product\""}
+{"stringValue":"\"NaN\"","valueType":"number","kind":"Number","value":null,"path":"number_id","reason":{"generatedMessage":true,"code":"ERR_ASSERTION","actual":false,"expected":true,"operator":"=="},"name":"CastError","message":"Cast to Number failed for value \"NaN\" (type number) at path \"number_id\" for model \"Product\""}
+{"level":"error","service":"doctor-service"}
+{"level":"error","service":"doctor-service"}
+{"message":{"error":{"errno":-3008,"code":"ENOTFOUND","syscall":"getaddrinfo","hostname":"api.cloudinary.com"}},"level":"error","service":"doctor-service"}

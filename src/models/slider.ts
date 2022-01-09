@@ -8,6 +8,8 @@ export interface SlidersDocument extends mongoose.Document {
   public_id: string;
   url: string;
   is_active: boolean;
+  comment: string;
+  last_updated_by: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +48,14 @@ const sliderSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    last_updated_by: {
+      type: String,
+      default: null,
+  },
+  comment: {
+      type: String,
+      default: null,
+  },
   },
   { timestamps: true, versionKey: false }
 );

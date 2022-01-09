@@ -15,17 +15,18 @@ export interface ProductDocument extends mongoose.Document {
   saleCount: number;
   category: Array<string>;
   tag: Array<string>;
-  variation: Array<object> | null;
+  variation: Array<object>;
   image: Array<string>;
   images: Array<object>;
   shortDescription: string;
   shortDescription_local: string;
   fullDescription: string;
   fullDescription_local: string;
-  number_id: number;
+  id: number;
   is_active: boolean;
   comment: string;
   last_updated_by: string;
+  stock: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -90,12 +91,10 @@ const ProduuctSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    variation: [
-      {
-        type: Object,
-        default: null,
-      },
-    ],
+    variation: {
+      type: Object,
+      default: null
+    },
     image: [
       {
         type: String,
@@ -122,7 +121,7 @@ const ProduuctSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    number_id: {
+    id: {
         type: Number,
     },
     is_active: {
@@ -137,6 +136,10 @@ const ProduuctSchema = new mongoose.Schema(
         type: String,
         default: null,
     },
+    stock: {
+      type: Number,
+      default: 10,
+    }
   },
   { timestamps: true, versionKey: false }
 );

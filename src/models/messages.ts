@@ -5,6 +5,7 @@ export interface MessageDocument extends mongoose.Document {
   message: string;
   is_done: boolean;
   comment: string;
+  last_updated_by: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,7 +30,11 @@ const messageSchema = new mongoose.Schema({
     is_done: {
         type: Boolean,
         default: true,
-    }
+    },
+    last_updated_by: {
+        type: String,
+        default: null,
+    },
 
 }, { timestamps: true, versionKey: false });
 

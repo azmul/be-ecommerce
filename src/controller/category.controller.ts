@@ -22,7 +22,7 @@ export async function getCategorysHandler(req: Request, res: Response) {
   const { last_id } = req.query;
 
   let query: any = {};
-  let countQuery: any = {is_active: true};
+  let countQuery: any = {};
 
   if (last_id) {
     query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
@@ -89,7 +89,7 @@ export async function updateCategoryHandler(
   if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
-    const category = await Category.findByIdAndUpdate(id, { name, name_local });
+    const category = await Category.findByIdAndUpdate(id, { ...req.body });
     if (!category)
       return res.status(404).send("The category with the given id was not found");
 
@@ -104,12 +104,10 @@ export async function deleteCategoryHandler(req: IGetUserAuthInfoRequest, res: R
     const id = req.params.id;
   
     try {
-        const category = await Category.findByIdAndUpdate(id, { is_active: false });
-        if (!category) return res.status(404).send('The category with the given id was not found');
-        
-        res.status(200).send({ message: "Deactivated"});
-    } catch(err: any){
+      await Category.deleteOne({ _id: ObjectId(id) });
+      res.status(200).send({ message: "Deleted" });
+    } catch (err: any) {
       log.error(err);
-      res.status(400).send({status: 400, message: err?.message});
+      res.status(400).send({ status: 400, message: err?.message });
     }
   }

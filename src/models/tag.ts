@@ -4,6 +4,8 @@ export interface TagDocument extends mongoose.Document {
   name_local: string;
   number_id: number;
   is_active: boolean;
+  comment: string;
+  last_updated_by: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,7 +26,15 @@ const tagSchema = new mongoose.Schema({
     is_active: {
         type: Boolean,
         default: true,
-    }
+    },
+    last_updated_by: {
+        type: String,
+        default: null,
+    },
+    comment: {
+        type: String,
+        default: null,
+    },
 
 }, { timestamps: true, versionKey: false });
 

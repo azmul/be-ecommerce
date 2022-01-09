@@ -7,6 +7,8 @@ export interface TestimonialsDocument extends mongoose.Document {
   image: string;
   customer_name: string;
   is_active: boolean;
+  comment: string;
+  last_updated_by: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +47,14 @@ const testimonialSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    last_updated_by: {
+      type: String,
+      default: null,
+  },
+  comment: {
+      type: String,
+      default: null,
+  },
   },
   { timestamps: true, versionKey: false }
 );

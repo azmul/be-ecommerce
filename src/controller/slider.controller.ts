@@ -11,7 +11,7 @@ export async function getAllSlidersHandler(req: Request, res: Response) {
   const { last_id } = req.query;
 
   let query: any = {};
-  let countQuery: any = {is_active: true};
+  let countQuery: any = {};
 
   if (last_id) {
     query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
@@ -88,12 +88,10 @@ export async function deleteSliderHandler(req: IGetUserAuthInfoRequest, res: Res
     const id = req.params.id;
   
     try {
-        const slider = await Slider.findByIdAndUpdate(id, { is_active: false });
-        if (!slider) return res.status(404).send('The slider with the given id was not found');
-        
-        res.status(200).send({ message: "Deactivated"});
-    } catch(err: any){
+      await Slider.deleteOne({ _id: ObjectId(id) });
+      res.status(200).send({ message: "Deleted" });
+    } catch (err: any) {
       log.error(err);
-      res.status(400).send({status: 400, message: err?.message});
+      res.status(400).send({ status: 400, message: err?.message });
     }
   }

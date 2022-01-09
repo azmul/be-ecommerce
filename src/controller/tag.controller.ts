@@ -22,7 +22,7 @@ export async function getTagsHandler(req: Request, res: Response) {
   const { last_id } = req.query;
 
   let query: any = {};
-  let countQuery: any = {is_active: true};
+  let countQuery: any = {};
 
   if (last_id) {
     query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
@@ -89,7 +89,7 @@ export async function updateTagHandler(
   if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
-    const tag = await Tag.findByIdAndUpdate(id, { name, name_local });
+    const tag = await Tag.findByIdAndUpdate(id, { ...req.body });
     if (!tag)
       return res.status(404).send("The Tag with the given id was not found");
 
@@ -104,12 +104,10 @@ export async function deleteTagHandler(req: IGetUserAuthInfoRequest, res: Respon
     const id = req.params.id;
   
     try {
-        const tag = await Tag.findByIdAndUpdate(id, { is_active: false });
-        if (!tag) return res.status(404).send('The Tag with the given id was not found');
-        
-        res.status(200).send({ message: "Deactivated"});
-    } catch(err: any){
+      await Tag.deleteOne({ _id: ObjectId(id) });
+      res.status(200).send({ message: "Deleted" });
+    } catch (err: any) {
       log.error(err);
-      res.status(400).send({status: 400, message: err?.message});
+      res.status(400).send({ status: 400, message: err?.message });
     }
   }

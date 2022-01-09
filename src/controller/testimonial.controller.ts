@@ -99,13 +99,8 @@ export async function deleteTestimonialHandler(
   const id = req.params.id;
 
   try {
-    const item = await Testimonial.findByIdAndUpdate(id, { is_active: false });
-    if (!item)
-      return res
-        .status(404)
-        .send("The Testimonial with the given id was not found");
-
-    res.status(200).send({ message: "Deactivated" });
+    await Testimonial.deleteOne({ _id: ObjectId(id) });
+    res.status(200).send({ message: "Deleted" });
   } catch (err: any) {
     log.error(err);
     res.status(400).send({ status: 400, message: err?.message });
