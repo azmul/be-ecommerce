@@ -8,7 +8,6 @@ import routes from "./routes"
 import connect from "./db/connect"
 import log from "./logger";
 import { createServer } from "http";
-import socketConnection from "./socket";
 import {log as logger} from "./logger/logging";
 
 dotenv.config();
@@ -30,7 +29,6 @@ httpServer.listen(port, () => {
     log.info(`Listening on port ${port}...`);
     connect();
     routes(app);
-    socketConnection(httpServer);
     logger.add(new winston.transports.Console({
       format: winston.format.simple(),
     }));

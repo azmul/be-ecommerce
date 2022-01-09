@@ -3,6 +3,7 @@ export interface MessageDocument extends mongoose.Document {
   name: string;
   phone: string;
   message: string;
+  subject: string;
   is_done: boolean;
   comment: string;
   last_updated_by: string;
@@ -19,6 +20,10 @@ const messageSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    subject: {
+        type: String,
+        default: null,
+    },
     message: {
         type: String,
         default: null,
@@ -29,7 +34,7 @@ const messageSchema = new mongoose.Schema({
     },
     is_done: {
         type: Boolean,
-        default: true,
+        default: false,
     },
     last_updated_by: {
         type: String,

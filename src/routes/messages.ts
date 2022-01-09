@@ -8,7 +8,7 @@ import {
    createMessageHandler,
    updateMessageHandler,
    deleteMessageHandler,
-} from "../controller/message.controller"
+} from "../controller/messages.controller"
 
 import { 
     messageSchema
@@ -23,7 +23,7 @@ router.get('/',  asyncHandler(getAllMessagesHandler));
 router.get('/:id', admin, asyncHandler(getMessageHandler));
 
  // Create a Message
-router.post('/', [admin, validateRequest(messageSchema)], asyncHandler(createMessageHandler));
+router.post('/', validateRequest(messageSchema), asyncHandler(createMessageHandler));
 
 // Update Message
 router.patch('/:id', admin, asyncHandler(updateMessageHandler));

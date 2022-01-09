@@ -5,7 +5,7 @@ import tag from "./tag";
 import category from "./category";
 import slider from "./slider";
 import testimonial from "./testimonial";
-import message from "./message";
+import messages from "./messages";
 import patient from  './patient'
 import notifications from  './notifications';
 import blog from  './blog'
@@ -24,7 +24,7 @@ export default function (app: Application) {
   app.use(`/${version.API_VERSION}/api/category`, category);
   app.use(`/${version.API_VERSION}/api/slider`, slider);
   app.use(`/${version.API_VERSION}/api/testimonial`, testimonial);
-  app.use(`/${version.API_VERSION}/api/message`, message);
+  app.use(`/${version.API_VERSION}/api/messages`, messages);
   app.use(`/${version.API_VERSION}/api/notifications`, notifications);
   app.use(`/${version.API_VERSION}/api/patient`, patient);
   app.use(`/${version.API_VERSION}/api/blog`, blog);

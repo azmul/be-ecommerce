@@ -83,14 +83,14 @@ export const testimonialSchema = object({
 export const messageSchema = object({
   body: object({
     name: string()
-      .required("title is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "title can only contain Latin letters."),
+      .required("name is required"),
     phone: string()
-      .required("subtitle is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "subtitle can only contain Latin letters."),
+      .required("phone is required")
+      .matches(/^[a-zA-Z0-9_.-]*$/, "phone can only contain Latin letters."),
+      subject: string()
+      .required("subject is required"),
     message: string()
-      .required("image is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "image can only contain Latin letters."),
+      .required("message is required")
   }),
 });
 

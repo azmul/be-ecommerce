@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IGetUserAuthInfoRequest } from "../defination/apiDefination";
 import mongodb from "mongodb";
 import { log } from "../logger/logging";
-import Message from "../models/message";
+import Messages from "../models/messages";
 import API from "../constant/apiContant";
 
 const ObjectId: any = mongodb.ObjectId;
@@ -23,8 +23,8 @@ export async function getAllMessagesHandler(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const items = await Message.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
-    const total = await Message.find(countQuery).countDocuments();
+    const items = await Messages.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
+    const total = await Messages.find(countQuery).countDocuments();
 
     res.status(200).send({
       data: items,
@@ -41,7 +41,7 @@ export async function getMessageHandler(req: Request, res: Response) {
   const id = req.params.id;
 
   try {
-    const item = await Message.findById(id);
+    const item = await Messages.findById(id);
     if (!item)
       return res.status(404).send("The Message with the given id was not found");
 
@@ -57,7 +57,7 @@ export async function createMessageHandler(
   res: Response
 ) {
   try {
-    let item = new Message({...req.body });
+    let item = new Messages({...req.body });
     await item.save();
     res.status(201).send({ message: "Message Created", status: 201 });
   } catch (err: any) {
@@ -73,7 +73,7 @@ export async function updateMessageHandler(
   const id = req.params.id;
 
   try {
-    const item = await Message.findByIdAndUpdate(id, { ...req.body });
+    const item = await Messages.findByIdAndUpdate(id, { ...req.body });
     if (!item)
       return res.status(404).send("The Message with the given id was not found");
 
@@ -88,7 +88,7 @@ export async function deleteMessageHandler(req: IGetUserAuthInfoRequest, res: Re
     const id = req.params.id;
   
     try {
-        const item = await Message.findByIdAndUpdate(id, { is_active: false });
+        const item = await Messages.findByIdAndUpdate(id, { is_active: false });
         if (!item) return res.status(404).send('The Message with the given id was not found');
         
         res.status(200).send({ message: "Deactivated"});
