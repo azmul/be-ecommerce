@@ -85,8 +85,7 @@ export const messageSchema = object({
     name: string()
       .required("name is required"),
     phone: string()
-      .required("phone is required")
-      .matches(/^[a-zA-Z0-9_.-]*$/, "phone can only contain Latin letters."),
+      .required("phone is required"),
       subject: string()
       .required("subject is required"),
     message: string()
