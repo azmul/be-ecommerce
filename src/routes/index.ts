@@ -7,6 +7,7 @@ import slider from "./slider";
 import testimonial from "./testimonial";
 import messages from "./messages";
 import patient from  './patient'
+import user from  './user'
 import notifications from  './notifications';
 import blog from  './blog'
 import products from  './products'
@@ -29,5 +30,6 @@ export default function (app: Application) {
   app.use(`/${version.API_VERSION}/api/messages`, messages);
   app.use(`/${version.API_VERSION}/api/notifications`, notifications);
   app.use(`/${version.API_VERSION}/api/patient`, patient);
+  app.use(`/${version.API_VERSION}/api/user`, user);
   app.use(`/${version.API_VERSION}/api/blog`, blog);
 }

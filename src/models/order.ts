@@ -5,6 +5,7 @@ export interface OrderDocument extends mongoose.Document {
   shippingStatus: number;
   products: Array<object>;
   userAddress: object;
+  userRegistered: boolean;
   comment: string;
   last_updated_by: string;
   createdAt: Date;
@@ -44,7 +45,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
-
+    userRegistered: {
+        type: Boolean,
+        default: false,
+    }
 }, { timestamps: true, versionKey: false });
 
 const Order = mongoose.model<OrderDocument>('Order', orderSchema);

@@ -6,5 +6,6 @@ export { default as async } from "./async";
 export { default as auth } from "./auth/auth";
 export { default as error } from "./error"
 export { default as patient } from "./auth/patient"
+export { default as user } from "./auth/user"
 export { default as patientHomeopathy } from "./auth/patientHomeopathy"
 export { default as adminPatientHomeoDoctor } from "./auth/adminPatientHomeoDoctor"

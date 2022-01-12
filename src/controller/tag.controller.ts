@@ -68,7 +68,7 @@ export async function createTagHandler(
   res: Response
 ) {
   const { name, name_local } = req.body;
-  if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
+  if (!name && !name_local) return res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
     let tag = new Tag({name, name_local, number_id: Math.floor(Math.random() * 999)});
@@ -86,7 +86,7 @@ export async function updateTagHandler(
 ) {
   const id = req.params.id;
   const { name, name_local } = req.body;
-  if (!name && !name_local) res.status(400).send({ status: 400, message: "Name is required" });
+  if (!name && !name_local) return res.status(400).send({ status: 400, message: "Name is required" });
 
   try {
     const tag = await Tag.findByIdAndUpdate(id, { ...req.body });

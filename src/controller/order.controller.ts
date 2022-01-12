@@ -5,8 +5,46 @@ import { log } from "../logger/logging";
 import Order from "../models/order";
 import API from "../constant/apiContant";
 import { numericCode } from "numeric-code";
+import User from "../models/user";
+import { phoneCheck } from "../utils/phone";
 
 const ObjectId: any = mongodb.ObjectId;
+
+export async function createOrderHandler(
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) {
+  try {
+    const { userAddress } = req.body;
+    const { phone, district, upazila, address } = userAddress;
+    if (!phone) {
+      res.status(400).send({ status: 400, message: "Please give phone number" });
+    } 
+    let user = await User.findOne({ phone: phoneCheck(phone) });
+
+    let order = new Order({...req.body, id: numericCode(6), userRegistered: !!user });
+    await order.save();
+
+    const infoUpdate: any = {};
+    if(!user?.district) {
+       infoUpdate.district = district;
+    }
+    if(!user?.upazila) {
+      infoUpdate.upazila = upazila;
+    }
+    if(!user?.address) {
+      infoUpdate.address = address;
+    }
+    
+    if(user) {
+      await User.findByIdAndUpdate(user._id, { orders: [...user.orders, order], ...infoUpdate });
+    }
+    res.status(201).send({ message: "Order Created", status: 201 });
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
+  }
+}
 
 export async function getAllOrdersHandler(req: Request, res: Response) {
   const { last_id } = req.query;
@@ -24,11 +62,11 @@ export async function getAllOrdersHandler(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const items = await Order.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
+    const orders = await Order.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
     const total = await Order.find(countQuery).countDocuments();
 
     res.status(200).send({
-      data: items,
+      data: orders,
       meta: {
         total,
       },
@@ -42,33 +80,19 @@ export async function getOrderHandler(req: Request, res: Response) {
     const id = req.params.id;
     const { isNumeric } = req.query;
     try {
-      const item = !isNumeric
+      const order = !isNumeric
         ? await Order.findById(id)
         : await Order.findOne({ id: Number(id) });
-      if (!item)
+      if (!order)
         return res
           .status(404)
           .send("The Order with the given id was not found");
   
-      res.status(200).send(item);
+      res.status(200).send(order);
     } catch (err: any) {
       log.error(err);
       res.status(400).send({ status: 400, message: err?.message });
     }
-}
-
-export async function createOrderHandler(
-  req: IGetUserAuthInfoRequest,
-  res: Response
-) {
-  try {
-    let item = new Order({...req.body, id: numericCode(6) });
-    await item.save();
-    res.status(201).send({ message: "Order Created", status: 201 });
-  } catch (err: any) {
-    log.error(err);
-    res.status(400).send({ status: 400, message: err?.message });
-  }
 }
 
 export async function updateOrderHandler(
@@ -78,11 +102,11 @@ export async function updateOrderHandler(
   const id = req.params.id;
 
   try {
-    const item = await Order.findByIdAndUpdate(id, { ...req.body });
-    if (!item)
+    const order = await Order.findByIdAndUpdate(id, { ...req.body });
+    if (!order)
       return res.status(404).send("The Order with the given id was not found");
 
-    res.status(200).send({ message: "Order Updated", data: item });
+    res.status(200).send({ message: "Order Updated", data: order });
   } catch (err: any) {
     log.error(err);
     res.status(400).send({ status: 400, message: err?.message });
@@ -93,8 +117,8 @@ export async function deleteOrderHandler(req: IGetUserAuthInfoRequest, res: Resp
     const id = req.params.id;
   
     try {
-        const item = await Order.findByIdAndUpdate(id, { is_active: false });
-        if (!item) return res.status(404).send('The Order with the given id was not found');
+        const order = await Order.findByIdAndUpdate(id, { is_active: false });
+        if (!order) return res.status(404).send('The Order with the given id was not found');
         
         res.status(200).send({ message: "Deactivated"});
     } catch(err: any){
