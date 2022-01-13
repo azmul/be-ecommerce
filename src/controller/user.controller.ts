@@ -171,7 +171,7 @@ export async function changePasswordUserHandler(
     const id: any = req?.user?._id;
     if (!id) return res.status(400).send({ status: 400, message: "Id not found" });
 
-    const phone: any = req?.query?.phone;
+    const phone: any = req?.user?.phone;
     if (!phone)
     return res.status(400).send({ status: 400, message: "Phone not found" });
 

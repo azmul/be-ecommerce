@@ -1,12 +1,15 @@
 import mongoose from "mongoose"
 export interface OrderDocument extends mongoose.Document {
   cartTotalPrice: number;
-  paymentMethod: number;
   shippingStatus: number;
   products: Array<object>;
   userAddress: object;
   userRegistered: boolean;
   comment: string;
+  paymentMethod: number;
+  isPaymentDone: boolean;
+  isPaymentCheck: boolean;
+  transactionId: string;
   last_updated_by: string;
   createdAt: Date;
   updatedAt: Date;
@@ -48,7 +51,20 @@ const orderSchema = new mongoose.Schema({
     userRegistered: {
         type: Boolean,
         default: false,
-    }
+    },
+    isPaymentDone: {
+        type: Boolean,
+        default: false,
+    },
+    isPaymentCheck: {
+      type: Boolean,
+      default: false,
+    },
+    transactionId: {
+        type: String,
+        default: null,
+        unique: true
+    },
 }, { timestamps: true, versionKey: false });
 
 const Order = mongoose.model<OrderDocument>('Order', orderSchema);

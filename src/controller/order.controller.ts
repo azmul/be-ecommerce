@@ -18,11 +18,11 @@ export async function createOrderHandler(
     const { userAddress } = req.body;
     const { phone, district, upazila, address } = userAddress;
     if (!phone) {
-      res.status(400).send({ status: 400, message: "Please give phone number" });
+      return res.status(400).send({ status: 400, message: "Please give phone number" });
     } 
     let user = await User.findOne({ phone: phoneCheck(phone) });
 
-    let order = new Order({...req.body, id: numericCode(6), userRegistered: !!user });
+    let order = new Order({...req.body, id: numericCode(12), userRegistered: !!user });
     await order.save();
 
     const infoUpdate: any = {};
@@ -102,7 +102,27 @@ export async function updateOrderHandler(
   const id = req.params.id;
 
   try {
-    const order = await Order.findByIdAndUpdate(id, { ...req.body });
+    const { shippingStatus, customer_phone, order_id, comment } = req.body;
+
+    if (!customer_phone) {
+      return res.status(400).send({ status: 400, message: "Please give customer phone number" });
+    } 
+
+    let user = await User.findOne({ phone: phoneCheck(customer_phone) });
+
+    const orders: any = user?.orders || [];
+    for (let i = 0; i < orders.length; i++) {
+      if(orders[i].id === order_id) {
+        orders[i].shippingStatus = shippingStatus;
+        break;
+      }
+    }
+
+    if(!!user) {
+      await User.findByIdAndUpdate(user._id, { orders: orders });
+    }
+
+    const order = await Order.findByIdAndUpdate(id, { shippingStatus, comment });
     if (!order)
       return res.status(404).send("The Order with the given id was not found");
 
