@@ -59,7 +59,7 @@ export async function createOrderHandler(
 export async function getAllOrdersHandler(req: Request, res: Response) {
   const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
   const skips = Number(pageSize) * (Number(current) - 1);
-  
+
   const skipFields = {
     comment: 0,
     last_updated_by: 0,
@@ -113,7 +113,7 @@ export async function updateOrderHandler(
   const id = req.params.id;
 
   try {
-    const { shippingStatus, customer_phone, order_id, comment } = req.body;
+    const { shippingStatus, customer_phone, order_id, comment, last_updated_by } = req.body;
 
     if (!customer_phone) {
       return res
@@ -138,6 +138,7 @@ export async function updateOrderHandler(
     const order = await Order.findByIdAndUpdate(id, {
       shippingStatus,
       comment,
+      last_updated_by
     });
     if (!order)
       return res.status(404).send("The Order with the given id was not found");
