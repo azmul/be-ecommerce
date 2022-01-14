@@ -19,16 +19,23 @@ export async function registerUserHandler(
   try {
     const { password, phone, name } = req.body;
     if (!phone) {
-      return res.status(400).send({ status: 400, message: "Provide phone number" });
-    } 
-
-    let isUser = await User.findOne({ phone: phoneCheck(phone) });
-   
-    if(!!isUser) {
-        return  res.status(400).send({message: "User already registered"});
+      return res
+        .status(400)
+        .send({ status: 400, message: "Provide phone number" });
     }
 
-    let user = new User({ id: numericCode(6), password, phone: phoneCheck(phone), name });
+    let isUser = await User.findOne({ phone: phoneCheck(phone) });
+
+    if (!!isUser) {
+      return res.status(400).send({ message: "User already registered" });
+    }
+
+    let user = new User({
+      id: numericCode(6),
+      password,
+      phone: phoneCheck(phone),
+      name,
+    });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
@@ -50,19 +57,21 @@ export async function loginUserHandler(
   try {
     const { phone, password } = req.body;
     if (!phone) {
-      return res.status(400).send({ status: 400, message: "Provide phone number" });
+      return res
+        .status(400)
+        .send({ status: 400, message: "Provide phone number" });
     }
     let user = await User.findOne({ phone: phoneCheck(phone) });
     if (!user)
       return res
         .status(400)
-        .send({ status: 400, message: "Invalid phone or password." });
+        .send({ status: 400, message: "Invalid phone number." });
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword)
       return res
         .status(400)
-        .send({ status: 400, message: "Invalid phone or password." });
+        .send({ status: 400, message: "Invalid password." });
 
     if (!user.is_active) {
       return res.status(400).send({
@@ -85,9 +94,9 @@ export async function loginUserHandler(
           "gender",
           "birth_day",
           "email",
-          "city",
-          "thana",
-          "street",
+          "district",
+          "upazila",
+          "address",
           "post_code",
           "is_active",
           "orders",
@@ -106,7 +115,8 @@ export async function profileUserHandler(
 ) {
   try {
     const id: any = req?.user?._id;
-    if (!id) return res.status(400).send({ status: 400, message: "Id not found" });
+    if (!id)
+      return res.status(400).send({ status: 400, message: "Id not found" });
 
     const user = await User.findById(id).select("-password");
     res.status(200).send(user);
@@ -122,12 +132,18 @@ export async function updateProfileUserHandler(
 ) {
   try {
     const id: any = req?.user?._id;
-    if (!id) return res.status(400).send({ status: 400, message: "Id not found" });
+    if (!id)
+      return res.status(400).send({ status: 400, message: "Id not found" });
+
+    const { phone } = req.body;
+    if (phone) {
+      req.body.phone = phoneCheck(phone);
+    }
 
     const user = await User.findByIdAndUpdate(id, { ...req.body });
 
     if (!user)
-    return res.status(404).send({
+      return res.status(404).send({
         status: 404,
         message: "The user with the given id was not found",
       });
@@ -169,16 +185,17 @@ export async function changePasswordUserHandler(
 ) {
   try {
     const id: any = req?.user?._id;
-    if (!id) return res.status(400).send({ status: 400, message: "Id not found" });
+    if (!id)
+      return res.status(400).send({ status: 400, message: "Id not found" });
 
     const phone: any = req?.user?.phone;
     if (!phone)
-    return res.status(400).send({ status: 400, message: "Phone not found" });
+      return res.status(400).send({ status: 400, message: "Phone not found" });
 
     const { password, confirm, current } = req.body;
 
     if (password !== confirm) {
-        return res.status(400).send({
+      return res.status(400).send({
         status: 400,
         message: "New password and confirm password are not same",
       });
@@ -191,7 +208,7 @@ export async function changePasswordUserHandler(
     const isCurrent = await bcrypt.compare(current, user.password);
 
     if (!isCurrent) {
-        return res
+      return res
         .status(400)
         .send({ status: 400, message: "Providing Current password is wrong" });
     }
@@ -199,7 +216,7 @@ export async function changePasswordUserHandler(
     const isSame = await bcrypt.compare(password, user.password);
 
     if (isSame) {
-        return res
+      return res
         .status(400)
         .send({ status: 400, message: "Old password and new password same" });
     } else {
@@ -221,7 +238,8 @@ export async function uploadImageUserHandler(
 ) {
   try {
     const id: any = req?.user?._id;
-    if (!id) return res.status(400).send({ status: 400, message: "Id not found" });
+    if (!id)
+      return res.status(400).send({ status: 400, message: "Id not found" });
 
     const isuser = await User.findById(id);
 
@@ -241,7 +259,7 @@ export async function uploadImageUserHandler(
         message: "Profile image updated successfully",
       });
     } else {
-        return res.status(404).send({ status: 404, message: "user not found" });
+      return res.status(404).send({ status: 404, message: "user not found" });
     }
   } catch (err: any) {
     log.error(err);
@@ -341,11 +359,12 @@ export async function getSingleUserByAdminHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const id = Number(req.params.id);
+  const id = req.params.id;
   if (!id) return res.status(404).send({ message: "The id was not correct" });
 
   try {
-    const user = await User.findOne({ id }).select("-password");
+    const user = isNaN(Number(id))
+      ? await User.findById(id).select("-password") : await User.findOne({ id: Number(id) }).select("-password");
     if (!user)
       return res
         .status(404)

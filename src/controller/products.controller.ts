@@ -24,7 +24,7 @@ export async function getAllProducts(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const products = await Product.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
+    const products = await Product.find(query).sort({createdAt: -1}).limit(API.DEFAULT_DATA_PER_PAGE);
     const total = await Product.find(countQuery).countDocuments();
 
     res.status(200).send({
@@ -54,9 +54,8 @@ export async function createProductHandler(
 
 export async function getProductHandler(req: Request, res: Response) {
   const id = req.params.id;
-  const { isNumeric } = req.query;
   try {
-    const product = !isNumeric
+    const product = isNaN(Number(id))
       ? await Product.findById(id)
       : await Product.findOne({ id: Number(id) });
     if (!product)

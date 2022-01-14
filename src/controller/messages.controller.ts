@@ -23,7 +23,7 @@ export async function getAllMessagesHandler(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const items = await Messages.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
+    const items = await Messages.find(query).sort({createdAt: -1}).limit(API.DEFAULT_DATA_PER_PAGE);
     const total = await Messages.find(countQuery).countDocuments();
 
     res.status(200).send({

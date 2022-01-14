@@ -23,7 +23,7 @@ export async function getAllTestimonialsHandler(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const items = await Testimonial.find(query).limit(
+    const items = await Testimonial.find(query).sort({createdAt: -1}).limit(
       API.DEFAULT_DATA_PER_PAGE
     );
     const total = await Testimonial.find(countQuery).countDocuments();

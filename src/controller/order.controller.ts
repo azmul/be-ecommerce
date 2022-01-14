@@ -7,6 +7,7 @@ import API from "../constant/apiContant";
 import { numericCode } from "numeric-code";
 import User from "../models/user";
 import { phoneCheck } from "../utils/phone";
+import products from "../routes/products";
 
 const ObjectId: any = mongodb.ObjectId;
 
@@ -18,26 +19,35 @@ export async function createOrderHandler(
     const { userAddress } = req.body;
     const { phone, district, upazila, address } = userAddress;
     if (!phone) {
-      return res.status(400).send({ status: 400, message: "Please give phone number" });
-    } 
+      return res
+        .status(400)
+        .send({ status: 400, message: "Please give phone number" });
+    }
     let user = await User.findOne({ phone: phoneCheck(phone) });
 
-    let order = new Order({...req.body, id: numericCode(12), userRegistered: !!user });
+    let order = new Order({
+      ...req.body,
+      id: numericCode(12),
+      userRegistered: !!user,
+    });
     await order.save();
 
     const infoUpdate: any = {};
-    if(!user?.district) {
-       infoUpdate.district = district;
+    if (!user?.district) {
+      infoUpdate.district = district;
     }
-    if(!user?.upazila) {
+    if (!user?.upazila) {
       infoUpdate.upazila = upazila;
     }
-    if(!user?.address) {
+    if (!user?.address) {
       infoUpdate.address = address;
     }
-    
-    if(user) {
-      await User.findByIdAndUpdate(user._id, { orders: [...user.orders, order], ...infoUpdate });
+
+    if (user) {
+      await User.findByIdAndUpdate(user._id, {
+        orders: [...user.orders, order],
+        ...infoUpdate,
+      });
     }
     res.status(201).send({ message: "Order Created", status: 201 });
   } catch (err: any) {
@@ -47,23 +57,19 @@ export async function createOrderHandler(
 }
 
 export async function getAllOrdersHandler(req: Request, res: Response) {
-  const { last_id } = req.query;
-
-  let query: any = {};
-  let countQuery: any = {};
-
-  if (last_id) {
-    query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
-  } else {
-    query = { ...countQuery };
-  }
-
-  delete query.last_id;
-  delete countQuery.last_id;
 
   try {
-    const orders = await Order.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
-    const total = await Order.find(countQuery).countDocuments();
+    const orders = await Order.find({},{
+      comment: 0,
+      last_updated_by: 0,
+      products: 0,
+      transactionId: 0,
+      userAddress: 0,
+      updatedAt: 0,
+    })
+      .sort({ createdAt: -1 })
+      .limit(API.DEFAULT_DATA_PER_PAGE);
+    const total = await Order.find().countDocuments();
 
     res.status(200).send({
       data: orders,
@@ -77,22 +83,19 @@ export async function getAllOrdersHandler(req: Request, res: Response) {
 }
 
 export async function getOrderHandler(req: Request, res: Response) {
-    const id = req.params.id;
-    const { isNumeric } = req.query;
-    try {
-      const order = !isNumeric
-        ? await Order.findById(id)
-        : await Order.findOne({ id: Number(id) });
-      if (!order)
-        return res
-          .status(404)
-          .send("The Order with the given id was not found");
-  
-      res.status(200).send(order);
-    } catch (err: any) {
-      log.error(err);
-      res.status(400).send({ status: 400, message: err?.message });
-    }
+  const id = req.params.id;
+  try {
+    const order = isNaN(Number(id))
+      ? await Order.findById(id)
+      : await Order.findOne({ id: Number(id) });
+    if (!order)
+      return res.status(404).send("The Order with the given id was not found");
+
+    res.status(200).send(order);
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
+  }
 }
 
 export async function updateOrderHandler(
@@ -105,24 +108,29 @@ export async function updateOrderHandler(
     const { shippingStatus, customer_phone, order_id, comment } = req.body;
 
     if (!customer_phone) {
-      return res.status(400).send({ status: 400, message: "Please give customer phone number" });
-    } 
+      return res
+        .status(400)
+        .send({ status: 400, message: "Please give customer phone number" });
+    }
 
     let user = await User.findOne({ phone: phoneCheck(customer_phone) });
 
     const orders: any = user?.orders || [];
     for (let i = 0; i < orders.length; i++) {
-      if(orders[i].id === order_id) {
+      if (orders[i].id === order_id) {
         orders[i].shippingStatus = shippingStatus;
         break;
       }
     }
 
-    if(!!user) {
+    if (!!user) {
       await User.findByIdAndUpdate(user._id, { orders: orders });
     }
 
-    const order = await Order.findByIdAndUpdate(id, { shippingStatus, comment });
+    const order = await Order.findByIdAndUpdate(id, {
+      shippingStatus,
+      comment,
+    });
     if (!order)
       return res.status(404).send("The Order with the given id was not found");
 
@@ -133,16 +141,20 @@ export async function updateOrderHandler(
   }
 }
 
-export async function deleteOrderHandler(req: IGetUserAuthInfoRequest, res: Response) {
-    const id = req.params.id;
-  
-    try {
-        const order = await Order.findByIdAndUpdate(id, { is_active: false });
-        if (!order) return res.status(404).send('The Order with the given id was not found');
-        
-        res.status(200).send({ message: "Deactivated"});
-    } catch(err: any){
-      log.error(err);
-      res.status(400).send({status: 400, message: err?.message});
-    }
+export async function deleteOrderHandler(
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) {
+  const id = req.params.id;
+
+  try {
+    const order = await Order.findByIdAndUpdate(id, { is_active: false });
+    if (!order)
+      return res.status(404).send("The Order with the given id was not found");
+
+    res.status(200).send({ message: "Deactivated" });
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
   }
+}

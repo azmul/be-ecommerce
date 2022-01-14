@@ -23,7 +23,7 @@ export async function getAllSlidersHandler(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const sliders = await Slider.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
+    const sliders = await Slider.find(query).sort({createdAt: -1}).limit(API.DEFAULT_DATA_PER_PAGE);
     const total = await Slider.find(countQuery).countDocuments();
 
     res.status(200).send({

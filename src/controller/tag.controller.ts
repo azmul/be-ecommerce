@@ -9,7 +9,7 @@ const ObjectId: any = mongodb.ObjectId;
 
 export async function getAllTagsHandler(req: Request, res: Response) {
   try {
-    const categorys = await Tag.find({is_active: true});
+    const categorys = await Tag.find({is_active: true}).sort({createdAt: -1});
     res.status(200).send({
       data: categorys,
     });
@@ -34,7 +34,7 @@ export async function getTagsHandler(req: Request, res: Response) {
   delete countQuery.last_id;
 
   try {
-    const tags = await Tag.find(query).limit(API.DEFAULT_DATA_PER_PAGE);
+    const tags = await Tag.find(query).sort({createdAt: -1}).limit(API.DEFAULT_DATA_PER_PAGE);
     const total = await Tag.find(countQuery).countDocuments();
 
     res.status(200).send({

@@ -30,6 +30,6 @@ export default function (app: Application) {
   app.use(`/${version.API_VERSION}/api/messages`, messages);
   app.use(`/${version.API_VERSION}/api/notifications`, notifications);
   app.use(`/${version.API_VERSION}/api/patient`, patient);
-  app.use(`/${version.API_VERSION}/api/user`, user);
+  app.use(`/${version.API_VERSION}/api/users`, user);
   app.use(`/${version.API_VERSION}/api/blog`, blog);
 }

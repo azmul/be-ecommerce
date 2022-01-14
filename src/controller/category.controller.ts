@@ -9,7 +9,7 @@ const ObjectId: any = mongodb.ObjectId;
 
 export async function getAllCategorysHandler(req: Request, res: Response) {
   try {
-    const categorys = await Category.find({is_active: true});
+    const categorys = await Category.find({is_active: true}).sort({createdAt: -1});
     res.status(200).send({
       data: categorys,
     });
