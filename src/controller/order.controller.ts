@@ -57,24 +57,32 @@ export async function createOrderHandler(
 }
 
 export async function getAllOrdersHandler(req: Request, res: Response) {
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const skips = Number(pageSize) * (Number(current) - 1);
+  
+  const skipFields = {
+    comment: 0,
+    last_updated_by: 0,
+    products: 0,
+    transactionId: 0,
+    userAddress: 0,
+    updatedAt: 0,
+  }; 
 
   try {
-    const orders = await Order.find({},{
-      comment: 0,
-      last_updated_by: 0,
-      products: 0,
-      transactionId: 0,
-      userAddress: 0,
-      updatedAt: 0,
-    })
+    
+    const orders = await Order.find({}, skipFields)
       .sort({ createdAt: -1 })
-      .limit(API.DEFAULT_DATA_PER_PAGE);
+      .skip(skips)
+      .limit(Number(pageSize));
     const total = await Order.find().countDocuments();
 
     res.status(200).send({
       data: orders,
-      meta: {
+      pagination: {
         total,
+        pageSize,
+        current,
       },
     });
   } catch (error) {

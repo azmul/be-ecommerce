@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import { admin } from "../middleware";
 
 import {
+  getAdminAllProducts,
   getAllProducts,
   createProductHandler,
   getProductHandler,
@@ -14,6 +15,9 @@ const router = express.Router();
 
 // Get all products
 router.get("/", asyncHandler(getAllProducts));
+
+// Get all products admin
+router.get("/admin", admin, asyncHandler(getAdminAllProducts));
 
 // Create a Product
 router.post("/", admin, asyncHandler(createProductHandler));

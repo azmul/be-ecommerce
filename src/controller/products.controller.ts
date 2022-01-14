@@ -8,28 +8,56 @@ import API from "../constant/apiContant";
 
 const ObjectId: any = mongodb.ObjectId;
 
-export async function getAllProducts(req: Request, res: Response) {
-  const { last_id } = req.query;
+export async function getAdminAllProducts(req: Request, res: Response) {
 
-  let query: any = {};
-  let countQuery: any = {};
-
-  if (last_id) {
-    query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
-  } else {
-    query = { ...countQuery };
-  }
-
-  delete query.last_id;
-  delete countQuery.last_id;
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const skips = Number(pageSize) * (Number(current) - 1);
+  
+  const skipFields = {
+    category: 0,
+    discount: 0,
+    discount_local: 0,
+    comment: 0,
+    fullDescription: 0,
+    fullDescription_local: 0,
+    image: 0,
+    images: 0,
+    offerEnd: 0,
+    offerEnd_local: 0,
+    saleCount: 0,
+    rating: 0,
+    tag: 0,
+    variation: 0,
+    last_updated_by: 0,
+    updatedAt: 0,
+  }; 
 
   try {
-    const products = await Product.find(query).sort({createdAt: -1}).limit(API.DEFAULT_DATA_PER_PAGE);
-    const total = await Product.find(countQuery).countDocuments();
+    const products = await Product.find({}, skipFields).sort({createdAt: -1}).skip(skips).limit(Number(pageSize));
+    const total = await Product.find().countDocuments();
 
     res.status(200).send({
       data: products,
-      meta: {
+      pagination: {
+        total,
+        pageSize,
+        current,
+      },
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
+export async function getAllProducts(req: Request, res: Response) {
+
+  try {
+    const products = await Product.find().sort({createdAt: -1});
+    const total = await Product.find().countDocuments();
+
+    res.status(200).send({
+      data: products,
+      pagination: {
         total: total,
       },
     });

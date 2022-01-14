@@ -8,28 +8,26 @@ import API from "../constant/apiContant";
 const ObjectId: any = mongodb.ObjectId;
 
 export async function getAllMessagesHandler(req: Request, res: Response) {
-  const { last_id } = req.query;
 
-  let query: any = {};
-  let countQuery: any = {};
-
-  if (last_id) {
-    query = { ...countQuery, _id: { $gt: new ObjectId(last_id) } };
-  } else {
-    query = { ...countQuery };
-  }
-
-  delete query.last_id;
-  delete countQuery.last_id;
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const skips = Number(pageSize) * (Number(current) - 1);
+  
+  const skipFields = {
+    comment: 0,
+    last_updated_by: 0,
+    updatedAt: 0,
+  }; 
 
   try {
-    const items = await Messages.find(query).sort({createdAt: -1}).limit(API.DEFAULT_DATA_PER_PAGE);
-    const total = await Messages.find(countQuery).countDocuments();
+    const items = await Messages.find({}, skipFields).sort({createdAt: -1}).skip(skips).limit(Number(pageSize));
+    const total = await Messages.find().countDocuments();
 
     res.status(200).send({
       data: items,
-      meta: {
+      pagination: {
         total,
+        pageSize,
+        current,
       },
     });
   } catch (error) {

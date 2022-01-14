@@ -271,22 +271,33 @@ export async function getAllUsersHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const id = req.body.last_id;
-  let query = {};
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const skips = Number(pageSize) * (Number(current) - 1);
 
-  if (id) {
-    query = { _id: { $gt: new ObjectId(id) } };
-  }
+  const skipFields = {
+    picture_url: 0,
+    password: 0,
+    address: 0,
+    post_code: 0,
+    orders: 0,
+    email: 0,
+    birth_day: 0,
+    updatedAt: 0,
+  };
+
   try {
-    const users = await User.find(query, { password: 0 }).limit(
-      API.DEFAULT_DATA_PER_PAGE
-    );
+    const users = await User.find({}, skipFields)
+      .sort({ createdAt: -1 })
+      .skip(skips)
+      .limit(Number(pageSize));
     const total = await User.find().countDocuments();
 
     res.status(200).send({
       data: users,
-      meta: {
+      pagination: {
         total,
+        pageSize,
+        current,
       },
     });
   } catch (err: any) {
@@ -303,7 +314,16 @@ export async function getAllUsersByAdminHandler(
   const skips = Number(pageSize) * (Number(current) - 1);
 
   try {
-    const skipFields = { password: 0 };
+    const skipFields = {
+      picture_url: 0,
+      password: 0,
+      address: 0,
+      post_code: 0,
+      orders: 0,
+      email: 0,
+      birth_day: 0,
+      updatedAt: 0,
+    };
 
     const users = await User.find({}, skipFields)
       .sort({ createdAt: -1 })
@@ -313,8 +333,10 @@ export async function getAllUsersByAdminHandler(
 
     res.status(200).send({
       data: users,
-      meta: {
+      pagination: {
         total,
+        pageSize,
+        current,
       },
     });
   } catch (err: any) {
@@ -364,7 +386,8 @@ export async function getSingleUserByAdminHandler(
 
   try {
     const user = isNaN(Number(id))
-      ? await User.findById(id).select("-password") : await User.findOne({ id: Number(id) }).select("-password");
+      ? await User.findById(id).select("-password")
+      : await User.findOne({ id: Number(id) }).select("-password");
     if (!user)
       return res
         .status(404)
