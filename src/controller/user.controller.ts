@@ -271,7 +271,7 @@ export async function getAllUsersHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE, startDate, endDate } = req.query;
   const skips = Number(pageSize) * (Number(current) - 1);
 
   const skipFields = {
@@ -285,12 +285,22 @@ export async function getAllUsersHandler(
     updatedAt: 0,
   };
 
+  const query: any = {};
+  if (startDate && endDate) {
+    const start: any = startDate;
+    const end: any = endDate;
+    query.createdAt = {
+      $gte: new Date(start),
+      $lt: new Date(end),
+    };
+  }
+
   try {
-    const users = await User.find({}, skipFields)
+    const users = await User.find(query, skipFields)
       .sort({ createdAt: -1 })
       .skip(skips)
       .limit(Number(pageSize));
-    const total = await User.find().countDocuments();
+    const total = await User.find(query).countDocuments();
 
     res.status(200).send({
       data: users,
@@ -310,26 +320,36 @@ export async function getAllUsersByAdminHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE, startDate, endDate } = req.query;
   const skips = Number(pageSize) * (Number(current) - 1);
 
-  try {
-    const skipFields = {
-      picture_url: 0,
-      password: 0,
-      address: 0,
-      post_code: 0,
-      orders: 0,
-      email: 0,
-      birth_day: 0,
-      updatedAt: 0,
-    };
+  const skipFields = {
+    picture_url: 0,
+    password: 0,
+    address: 0,
+    post_code: 0,
+    orders: 0,
+    email: 0,
+    birth_day: 0,
+    updatedAt: 0,
+  };
 
-    const users = await User.find({}, skipFields)
+  const query: any = {};
+  if (startDate && endDate) {
+    const start: any = startDate;
+    const end: any = endDate;
+    query.createdAt = {
+      $gte: new Date(start),
+      $lt: new Date(end),
+    };
+  }
+
+  try {
+    const users = await User.find(query, skipFields)
       .sort({ createdAt: -1 })
       .skip(skips)
       .limit(Number(pageSize));
-    const total = await User.find().countDocuments();
+    const total = await User.find(query).countDocuments();
 
     res.status(200).send({
       data: users,

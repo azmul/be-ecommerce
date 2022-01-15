@@ -10,7 +10,7 @@ const ObjectId: any = mongodb.ObjectId;
 
 export async function getAdminAllProducts(req: Request, res: Response) {
 
-  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE, startDate, endDate } = req.query;
   const skips = Number(pageSize) * (Number(current) - 1);
   
   const skipFields = {
@@ -32,9 +32,19 @@ export async function getAdminAllProducts(req: Request, res: Response) {
     updatedAt: 0,
   }; 
 
+  const query: any = {};
+  if (startDate && endDate) {
+    const start: any = startDate;
+    const end: any = endDate;
+    query.createdAt = {
+      $gte: new Date(start),
+      $lt: new Date(end),
+    };
+  }
+
   try {
-    const products = await Product.find({}, skipFields).sort({createdAt: -1}).skip(skips).limit(Number(pageSize));
-    const total = await Product.find().countDocuments();
+    const products = await Product.find(query, skipFields).sort({createdAt: -1}).skip(skips).limit(Number(pageSize));
+    const total = await Product.find(query).countDocuments();
 
     res.status(200).send({
       data: products,

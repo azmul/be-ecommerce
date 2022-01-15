@@ -9,7 +9,7 @@ const ObjectId: any = mongodb.ObjectId;
 
 export async function getAllMessagesHandler(req: Request, res: Response) {
 
-  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE } = req.query;
+  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE, startDate, endDate } = req.query;
   const skips = Number(pageSize) * (Number(current) - 1);
   
   const skipFields = {
@@ -18,9 +18,19 @@ export async function getAllMessagesHandler(req: Request, res: Response) {
     updatedAt: 0,
   }; 
 
+  const query: any = {};
+  if (startDate && endDate) {
+    const start: any = startDate;
+    const end: any = endDate;
+    query.createdAt = {
+      $gte: new Date(start),
+      $lt: new Date(end),
+    };
+  }
+
   try {
-    const items = await Messages.find({}, skipFields).sort({createdAt: -1}).skip(skips).limit(Number(pageSize));
-    const total = await Messages.find().countDocuments();
+    const items = await Messages.find(query, skipFields).sort({createdAt: -1}).skip(skips).limit(Number(pageSize));
+    const total = await Messages.find(query).countDocuments();
 
     res.status(200).send({
       data: items,
