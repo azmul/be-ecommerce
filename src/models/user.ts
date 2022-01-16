@@ -42,7 +42,6 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    unique: true,
     minlength: 11,
     maxlength: 15
   },
@@ -62,7 +61,6 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    unique: true,
     default: null,
   },
   district: {

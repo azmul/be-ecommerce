@@ -22,7 +22,6 @@ const adminSchema = new mongoose.Schema({
       phone: {
         type: String,
         required: true,
-        unique: true,
         minlength: 11,
         maxlength: 15
       },

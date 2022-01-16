@@ -62,8 +62,7 @@ const orderSchema = new mongoose.Schema({
     },
     transactionId: {
         type: String,
-        default: null,
-        unique: true
+        default: null
     },
 }, { timestamps: true, versionKey: false });
 
