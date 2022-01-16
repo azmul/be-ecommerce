@@ -1,6 +1,8 @@
 import express from "express"
 import asyncHandler from  'express-async-handler'
 import {admin, validateRequest} from  '../middleware'
+import { getCacheHandler, deleteCacheHandler } from "../utils/routeCache";
+import { CUSTOMER_SLIDERS } from "../constant/cacheKeys";
 
 import {
    getAllSlidersHandler,
@@ -17,18 +19,19 @@ import {
 const router = express.Router();
 
 // Get all Sliders
-router.get('/',  asyncHandler(getAllSlidersHandler));
+router.get('/',   getCacheHandler(CUSTOMER_SLIDERS.duration, CUSTOMER_SLIDERS.key),
+asyncHandler(getAllSlidersHandler));
 
 // Get a Slider
 router.get('/:id', admin, asyncHandler(getSliderHandler));
 
  // Create a Slider
-router.post('/', [admin, validateRequest(sliderSchema)], asyncHandler(createSliderHandler));
+router.post('/', [admin, validateRequest(sliderSchema), deleteCacheHandler(CUSTOMER_SLIDERS.key)], asyncHandler(createSliderHandler));
 
 // Update Slider
-router.patch('/:id', admin, asyncHandler(updateSliderHandler));
+router.patch('/:id', [admin, deleteCacheHandler(CUSTOMER_SLIDERS.key)], asyncHandler(updateSliderHandler));
 
 // Delete Slider
-router.delete('/:id', admin, asyncHandler(deleteSliderHandler));
+router.delete('/:id', [admin, deleteCacheHandler(CUSTOMER_SLIDERS.key)], asyncHandler(deleteSliderHandler));
 
 export default router; 

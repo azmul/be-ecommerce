@@ -289,10 +289,12 @@ export async function getAllUsersHandler(
   if (startDate && endDate) {
     const start: any = startDate;
     const end: any = endDate;
-    query.createdAt = {
-      $gte: new Date(start),
-      $lt: new Date(end),
-    };
+    if(start && end) {
+      query.createdAt = {
+        $gte: new Date(start),
+        $lt: new Date(end),
+      };
+    }
   }
 
   try {

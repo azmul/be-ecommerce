@@ -36,10 +36,12 @@ export async function getAdminAllProducts(req: Request, res: Response) {
   if (startDate && endDate) {
     const start: any = startDate;
     const end: any = endDate;
-    query.createdAt = {
-      $gte: new Date(start),
-      $lt: new Date(end),
-    };
+    if(start && end) {
+      query.createdAt = {
+        $gte: new Date(start),
+        $lt: new Date(end),
+      };
+    }
   }
 
   try {
@@ -60,9 +62,14 @@ export async function getAdminAllProducts(req: Request, res: Response) {
 }
 
 export async function getAllProducts(req: Request, res: Response) {
-
+  const skipFields = {
+    comment: 0,
+    images: 0,
+    updatedAt: 0,
+    createdAt: 0,
+  }; 
   try {
-    const products = await Product.find().sort({createdAt: -1});
+    const products = await Product.find({}, skipFields).sort({createdAt: -1});
     const total = await Product.find().countDocuments();
 
     res.status(200).send({
@@ -120,7 +127,6 @@ export async function updateProductHandler(
       return res
         .status(404)
         .send("The product with the given id was not found");
-
     res.status(200).send({ message: "product Updated" });
   } catch (err: any) {
     log.error(err);
