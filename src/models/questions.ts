@@ -10,6 +10,16 @@ export interface QuestionsDocument extends mongoose.Document {
   updatedAt: Date;
 }
 
+// {
+//   ques: null,
+//   isAns: false,
+//   ans: null,
+//   ansTime: true,
+//   cutomerName: null,
+//   cutomerPhone: null,
+//   id: null,
+// }
+
 const questionSchema = new mongoose.Schema({
     product_name: {
       type: String,
@@ -24,7 +34,7 @@ const questionSchema = new mongoose.Schema({
         default: null,
     },
     product_image: {
-      type: Boolean,
+      type: String,
       default: false,
     },   
     is_question: {
@@ -32,13 +42,7 @@ const questionSchema = new mongoose.Schema({
       default: false
     },
     questions: [{
-        ques: null,
-        ques_time: null,
-        is_ans: false,
-        ans: null,
-        ans_time: null,
-        cutomer_name: null,
-        cutomer_phone: null,
+      type: Object
     }]
 }, {timestamps: true, versionKey: false });
 

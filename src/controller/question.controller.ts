@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
 import { IGetUserAuthInfoRequest } from "../defination/apiDefination";
-import mongodb from "mongodb";
 import { log } from "../logger/logging";
-import Review from "../models/review";
+import Question from "../models/questions";
 import API from "../constant/apiContant";
 import { numericCode } from "numeric-code";
 
-const ObjectId: any = mongodb.ObjectId;
-
-export async function getAllReviewsHandler(req: Request, res: Response) {
+export async function getAllQuestionsHandler(req: Request, res: Response) {
   const {
     current = 1,
     pageSize = API.DEFAULT_DATA_PER_PAGE,
@@ -35,14 +32,14 @@ export async function getAllReviewsHandler(req: Request, res: Response) {
   }
 
   try {
-    const reviews = await Review.find(query, skipFields)
+    const questions = await Question.find(query, skipFields)
       .sort({ updatedAt: -1 })
       .skip(skips)
       .limit(Number(pageSize));
-    const total = await Review.find(query).countDocuments();
+    const total = await Question.find(query).countDocuments();
 
     res.status(200).send({
-      data: reviews,
+      data: questions,
       pagination: {
         total,
         pageSize,
@@ -54,76 +51,79 @@ export async function getAllReviewsHandler(req: Request, res: Response) {
   }
 }
 
-export async function getReviewByProductIdHandler(req: Request, res: Response) {
+export async function getQuestionByProductIdHandler(req: Request, res: Response) {
   const id = req.params.id;
   try {
-    const review =  await Review.findOne({product_numeric_id: Number(id)});
-    res.status(200).send(review);
+    const question =  await Question.findOne({product_numeric_id: Number(id)});
+    res.status(200).send(question);
   } catch (err: any) {
     log.error(err);
     res.status(400).send({ status: 400, message: err?.message });
   }
 }
 
-export async function getReviewHandler(req: Request, res: Response) {
+export async function getQuestionHandler(req: Request, res: Response) {
     const id = req.params.id;
     try {
-      const review =  await Review.findById(id);
-      res.status(200).send(review);
+      const question =  await Question.findById(id);
+      res.status(200).send(question);
     } catch (err: any) {
       log.error(err);
       res.status(400).send({ status: 400, message: err?.message });
     }
 }
 
-export async function createReviewHandler(
+export async function createQuestionHandler(
     req: IGetUserAuthInfoRequest,
     res: Response
   ) {
     try {
   
-      const review = new Review({
+      const question = new Question({
         ...req.body,
         id: numericCode(14)
       });
-      await review.save();
-      res.status(201).send({ message: "Review Created", status: 201 });
+      await question.save();
+      res.status(201).send({ message: "question Created", status: 201 });
     } catch (err: any) {
       log.error(err);
       res.status(400).send({ status: 400, message: err?.message });
     }
 }
 
-export async function updateReviewHandler(
+export async function updateQuestionHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
   const id = req.params.id;
 
   try {
-    const { reviewId, customerPhone, customerName, rating, isApproved, message, isDeleted } = req.body;
+    const { questionId, customerPhone, customerName, ques, ans, ansTime, isDeleted } = req.body;
 
-    const item = await Review.findById(id);
+    const item = await Question.findById(id);
     if (!item)
-      return res.status(404).send("The review with the given id was not found");
-    const reviews: any = item.reviews;
+      return res.status(404).send("The question with the given id was not found");
+    const questions: any = item.questions;
 
-    const reviewIndex = reviews.findIndex((review: any) => Number(review.id) === Number(reviewId))
+    const questionIndex = questions.findIndex((question: any) => Number(question.id) === Number(questionId))
 
     if(!!isDeleted) {
-        reviews.splice(reviewIndex, 1);
+        questions.splice(questionIndex, 1);
     } else {
-        if(reviewIndex === -1) {
-            reviews.unshift({ customerName, customerPhone, message, rating, isApproved, id: numericCode(6), createdAt: new Date() })
+        if(questionIndex === -1) {
+            questions.unshift({ customerName, customerPhone, ques, isAns: false, ans, ansTime, id: numericCode(6), createdAt: new Date() })
         } else {
-            reviews[reviewIndex].rating = rating;
-            reviews[reviewIndex].isApproved = isApproved;
-            reviews[reviewIndex].message = message;
+            questions[questionIndex].ques = ques;
+            if(ans) {
+                questions[questionIndex].isAns = true;
+                questions[questionIndex].ans = ans;
+                questions[questionIndex].ansTime = new Date();
+            }
         }
     }
 
-    await Review.findByIdAndUpdate(id, { reviews: reviews });
-    res.status(200).send({ message: "review Updated" });
+    await Question.findByIdAndUpdate(id, { questions: questions });
+    res.status(200).send({ message: "question Updated" });
   } catch (err: any) {
     log.error(err);
     res.status(400).send({ status: 400, message: err?.message });
