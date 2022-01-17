@@ -1,6 +1,5 @@
 import { Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
-import ROLE  from '../../constant/roleConstant';
 import { IGetUserAuthInfoRequest } from "../../defination/apiDefination";
 import {JWT_PRIVATE_KEY, APPLICATION} from "../../environment";
 

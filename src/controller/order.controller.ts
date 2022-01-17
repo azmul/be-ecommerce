@@ -7,7 +7,6 @@ import API from "../constant/apiContant";
 import { numericCode } from "numeric-code";
 import User from "../models/user";
 import { phoneCheck } from "../utils/phone";
-import products from "../routes/products";
 
 const ObjectId: any = mongodb.ObjectId;
 

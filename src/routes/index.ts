@@ -12,6 +12,7 @@ import notifications from  './notifications';
 import blog from  './blog'
 import products from  './products'
 import orders from  './orders'
+import review from  './review'
 import image from  './image'
 import error from  "../middleware/error"
 import version from  "../constant/version"
@@ -32,4 +33,5 @@ export default function (app: Application) {
   app.use(`/${version.API_VERSION}/api/patient`, patient);
   app.use(`/${version.API_VERSION}/api/users`, user);
   app.use(`/${version.API_VERSION}/api/blog`, blog);
+  app.use(`/${version.API_VERSION}/api/review`, review);
 }
