@@ -1,54 +1,71 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 export interface BlogDocument extends mongoose.Document {
   title: string;
-  content: object;
-  creator_id: string;
+  title_local: string;
+  content: string;
+  content_local: string;
   creator_name: string;
-  creator_role: string;
-  creator_specialist: string;
-  creator_institution: string;
-  creator_picture_url: string;
+  like_count: number;
+  picture_url: string;
+  category: string;
+  comments: Array<Object>;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const blogSchema = new mongoose.Schema({
+// {
+//   is_approved: false,
+//   customerName: null,
+//   customerPhone: null,
+//   id: number, 
+//   comment: string,
+//   createdAt: string
+// }
+
+
+const blogSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        default: null,
-      },
+      type: String,
+      default: null,
+    },
+    title_local: {
+      type: String,
+      default: null,
+    },
     content: {
       type: Object,
       default: null,
     },
-    creator_id: {
-      type: String,
-      default: null
+    content_local: {
+      type: Object,
+      default: null,
+    },
+    like_count: {
+      type: Number,
+      default: 0,
     },
     creator_name: {
-        type: String,
-        default: null
+      type: String,
+      default: null,
+    },
+    picture_url: {
+      type: String,
+      default: null,
+    },
+    category: {
+      type: String,
+      default: null,
+    },
+    comments: [
+      {
+        type: Object,
       },
-    creator_role: {
-        type: String,
-        default: null
-      },
-      creator_specialist: {
-        type: String,
-        default: null
-      },
-      creator_institution: {
-        type: String,
-        default: null
-      },
-      creator_picture_url: {
-        type: String,
-        default: null
-      },
-}, { timestamps: true, versionKey: false });
+    ],
+  },
+  { timestamps: true, versionKey: false }
+);
 
-const Blog = mongoose.model<BlogDocument>('Blog', blogSchema);
+const Blog = mongoose.model<BlogDocument>("Blog", blogSchema);
 
 export default Blog;
-
-

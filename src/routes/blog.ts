@@ -1,13 +1,17 @@
 import express from "express"
-import {validateRequest} from  '../middleware'
 import asyncHandler from  'express-async-handler'
+import { admin, auth ,validateRequest } from "../middleware";
+import { getCacheHandler, deleteCacheHandler } from "../utils/routeCache";
+import { BLOGS, BLOGS_RECENT } from "../constant/cacheKeys";
 
 import {
+   getRecentBlogsHandler,
    getAllBlogsHandler,
    getBlogHandler,
    createBlogHandler,
    updateBlogHandler,
-   getBlogsByCreatorHandler,
+   updateBlogCommentHandler,
+   deleteBlogHandler,
 } from "../controller/blog.controller"
 
 import { 
@@ -17,19 +21,25 @@ import {
 
 const router = express.Router();
 
+// Get recent blogs
+router.get('/', [auth, getCacheHandler(BLOGS_RECENT.duration, BLOGS_RECENT.key)], asyncHandler(getRecentBlogsHandler));
+
 // Get all blogs
-router.get('/',  asyncHandler(getAllBlogsHandler));
+router.get('/', [auth, getCacheHandler(BLOGS.duration, BLOGS.key)], asyncHandler(getAllBlogsHandler));
 
 // Get a Blog
-router.get('/:id', asyncHandler(getBlogHandler));
+router.get('/:id', auth, asyncHandler(getBlogHandler));
 
  // Create a Blog
-router.post('/', validateRequest(createSchema), asyncHandler(createBlogHandler));
+router.post('/', [admin, deleteCacheHandler(BLOGS_RECENT.key), deleteCacheHandler(BLOGS.key),  validateRequest(createSchema)], asyncHandler(createBlogHandler));
 
 // Update blog
-router.patch('/:id', validateRequest(updateSchema), asyncHandler(updateBlogHandler));
+router.patch('/:id', [validateRequest(updateSchema), admin, deleteCacheHandler(BLOGS_RECENT.key), deleteCacheHandler(BLOGS.key)], asyncHandler(updateBlogHandler));
 
-// Get Blogs by Doctor id
-router.get('/creator/:id', asyncHandler(getBlogsByCreatorHandler));
+// Update comments of blog
+router.post('/comments/:id', [auth, deleteCacheHandler(BLOGS_RECENT.key), deleteCacheHandler(BLOGS.key)], asyncHandler(updateBlogCommentHandler));
+
+// Delete a Blog
+router.delete('/:id', [admin, deleteCacheHandler(BLOGS_RECENT.key), deleteCacheHandler(BLOGS.key)], asyncHandler(deleteBlogHandler));
 
 export default router; 

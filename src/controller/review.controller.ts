@@ -110,15 +110,18 @@ export async function updateReviewHandler(
 
     const reviewIndex = reviews.findIndex((review: any) => Number(review.id) === Number(reviewId))
 
-    if(!!isDeleted) {
+    if(!!isDeleted && reviewIndex !== -1) {
         reviews.splice(reviewIndex, 1);
     } else {
         if(reviewIndex === -1) {
-            reviews.unshift({ customerName, customerPhone, message, rating, isApproved, id: numericCode(6), createdAt: new Date() })
+            reviews.unshift({ customerName, customerPhone, message, rating, isApproved: false, id: numericCode(6), createdAt: new Date() })
         } else {
             reviews[reviewIndex].rating = rating;
             reviews[reviewIndex].isApproved = isApproved;
             reviews[reviewIndex].message = message;
+            if(isApproved) {
+                reviews[reviewIndex].isApproved = true;
+            }
         }
     }
 

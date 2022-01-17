@@ -107,7 +107,7 @@ export async function updateQuestionHandler(
 
     const questionIndex = questions.findIndex((question: any) => Number(question.id) === Number(questionId))
 
-    if(!!isDeleted) {
+    if(!!isDeleted && questionIndex !== -1) {
         questions.splice(questionIndex, 1);
     } else {
         if(questionIndex === -1) {
