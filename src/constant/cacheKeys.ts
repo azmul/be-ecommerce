@@ -11,4 +11,6 @@ export const PRODUCT_CATEGORY = { key: "product_category", duration: 100000 };
 export const PRODUCT_TAG = { key: "product_tag", duration: 100000 };
 export const BLOGS = { key: "blogs", duration: 100000 };
 export const BLOGS_RECENT = { key: "blogs_recent", duration: 100000 };
+export const SETTING = { key: "setting", duration: 100000 };
+
 

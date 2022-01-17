@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-export interface CommonDocument extends mongoose.Document {
+
+export interface SettingDocument extends mongoose.Document {
   call_us_number: string;
   free_delivery_money: string;
   contact_number1: string;
@@ -16,7 +17,7 @@ export interface CommonDocument extends mongoose.Document {
   updatedAt: Date;
 }
 
-const linkSchema = new mongoose.Schema(
+const settingSchema = new mongoose.Schema(
   {
     call_us_number: {
       type: String,
@@ -70,6 +71,6 @@ const linkSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false }
 );
 
-const Link = mongoose.model<CommonDocument>("Link", linkSchema);
+const Setting = mongoose.model<SettingDocument>("Setting", settingSchema);
 
-export default Link;
+export default Setting;

@@ -15,6 +15,7 @@ import orders from  './orders'
 import review from  './review'
 import question from  './question'
 import image from  './image'
+import setting from "./setting";
 import error from  "../middleware/error"
 import version from  "../constant/version"
 
@@ -34,6 +35,7 @@ export default function (app: Application) {
   app.use(`/${version.API_VERSION}/api/patient`, patient);
   app.use(`/${version.API_VERSION}/api/users`, user);
   app.use(`/${version.API_VERSION}/api/blog`, blog);
+  app.use(`/${version.API_VERSION}/api/setting`, setting);
   app.use(`/${version.API_VERSION}/api/review`, review);
   app.use(`/${version.API_VERSION}/api/question`, question);
 }
