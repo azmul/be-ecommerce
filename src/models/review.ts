@@ -6,7 +6,6 @@ export interface ReviewDocument extends mongoose.Document {
   product_image: string;
   product_numeric_id: number;
   reviews: Array<Object>;
-  is_question: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

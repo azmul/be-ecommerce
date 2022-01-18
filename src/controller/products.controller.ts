@@ -5,6 +5,8 @@ import Product from "../models/product";
 import { log } from "../logger/logging";
 import { numericCode } from "numeric-code";
 import API from "../constant/apiContant";
+import Review from "../models/review";
+import Question from "../models/questions";
 
 const ObjectId: any = mongodb.ObjectId;
 
@@ -29,7 +31,6 @@ export async function getAdminAllProducts(req: Request, res: Response) {
     tag: 0,
     variation: 0,
     last_updated_by: 0,
-    updatedAt: 0,
   }; 
 
   const query: any = {};
@@ -37,7 +38,7 @@ export async function getAdminAllProducts(req: Request, res: Response) {
     const start: any = startDate;
     const end: any = endDate;
     if(start && end) {
-      query.createdAt = {
+      query.updatedAt = {
         $gte: new Date(start),
         $lt: new Date(end),
       };
@@ -45,7 +46,7 @@ export async function getAdminAllProducts(req: Request, res: Response) {
   }
 
   try {
-    const products = await Product.find(query, skipFields).sort({createdAt: -1}).skip(skips).limit(Number(pageSize));
+    const products = await Product.find(query, skipFields).sort({updatedAt: -1}).skip(skips).limit(Number(pageSize));
     const total = await Product.find(query).countDocuments();
 
     res.status(200).send({
@@ -90,6 +91,26 @@ export async function createProductHandler(
   try {
     let product = new Product({ ...req.body, id: numericCode(6) });
     await product.save();
+
+    const productInfo = {
+      product_numeric_id: product.id,
+      product_name: product.name,
+      product_id: product._id,
+      product_image: product.image[0]
+    }
+
+    const review = new Review({
+      ...productInfo,
+      id: numericCode(14)
+    });
+    await review.save();
+
+    const question = new Question({
+      ...productInfo,
+      id: numericCode(14)
+    });
+    await question.save();
+
     res.status(201).send({ message: "Product Created", data: product });
   } catch (err: any) {
     log.error(err);

@@ -113,7 +113,6 @@ export async function updateQuestionHandler(
         if(questionIndex === -1) {
             questions.unshift({ customerName, customerPhone, ques, isAns: false, ans, ansTime, id: numericCode(6), createdAt: new Date() })
         } else {
-            questions[questionIndex].ques = ques;
             if(ans) {
                 questions[questionIndex].isAns = true;
                 questions[questionIndex].ans = ans;

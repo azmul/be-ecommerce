@@ -5,7 +5,6 @@ export interface QuestionsDocument extends mongoose.Document {
   product_image: string;
   product_numeric_id: number;
   questions: Array<Object>;
-  is_question: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,10 +35,6 @@ const questionSchema = new mongoose.Schema({
     product_image: {
       type: String,
       default: false,
-    },   
-    is_question: {
-      type: Boolean,
-      default: false
     },
     questions: [{
       type: Object

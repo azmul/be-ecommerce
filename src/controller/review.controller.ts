@@ -116,9 +116,6 @@ export async function updateReviewHandler(
         if(reviewIndex === -1) {
             reviews.unshift({ customerName, customerPhone, message, rating, isApproved: false, id: numericCode(6), createdAt: new Date() })
         } else {
-            reviews[reviewIndex].rating = rating;
-            reviews[reviewIndex].isApproved = isApproved;
-            reviews[reviewIndex].message = message;
             if(isApproved) {
                 reviews[reviewIndex].isApproved = true;
             }

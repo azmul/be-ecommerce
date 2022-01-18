@@ -11,8 +11,7 @@ import {
 } from "../controller/review.controller";
 
 import { 
-    createReviewSchema,
-    updateReviewSchema
+    createReviewSchema
   } from "../schema/review.schema";
 
 const router = express.Router();
@@ -30,6 +29,6 @@ router.get('/product/:id', user, asyncHandler(getReviewByProductIdHandler));
 router.get('/:id', admin, asyncHandler(getReviewHandler));
 
 // Update Review
-router.patch('/:id', [auth, validateRequest(updateReviewSchema)], asyncHandler(updateReviewHandler));
+router.patch('/:id', auth, asyncHandler(updateReviewHandler));
 
 export default router;
