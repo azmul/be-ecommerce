@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
 import { IGetUserAuthInfoRequest } from "../defination/apiDefination";
-import mongodb from "mongodb";
 import { log } from "../logger/logging";
 import Setting from "../models/setting";
-import { numericCode } from "numeric-code";
-
-const ObjectId: any = mongodb.ObjectId;
 
 export async function getSettingHandler(req: Request, res: Response) {
   try {
-    const setting = await Setting.find();
+    const setting = await Setting.find({}, { createdAt: 0, _id: 0 });
     const response = setting && setting.length > 0 ? setting[0] : {};
     res.status(200).send(response);
   } catch (error) {
@@ -28,8 +24,8 @@ export async function createSettingHandler(
       const newSetting = new Setting({ ...req.body });
       await newSetting.save();
     } else {
-        const id = setting[0]._id;
-        await Setting.findByIdAndUpdate(id, { ...req.body });
+      const id = setting[0]._id;
+      await Setting.findByIdAndUpdate(id, { ...req.body });
     }
 
     res.status(201).send({ message: "Setting Updated", status: 201 });

@@ -8,6 +8,10 @@ export interface BlogDocument extends mongoose.Document {
   like_count: number;
   picture_url: string;
   category: string;
+  id: number;
+  comment: string;
+  last_updated_by: string;
+  is_active: boolean;
   comments: Array<Object>;
   createdAt: Date;
   updatedAt: Date;
@@ -17,11 +21,10 @@ export interface BlogDocument extends mongoose.Document {
 //   is_approved: false,
 //   customerName: null,
 //   customerPhone: null,
-//   id: number, 
+//   id: number,
 //   comment: string,
 //   createdAt: string
 // }
-
 
 const blogSchema = new mongoose.Schema(
   {
@@ -33,6 +36,10 @@ const blogSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    id: {
+      type: Number,
+      default: null,
+    },
     content: {
       type: Object,
       default: null,
@@ -40,6 +47,10 @@ const blogSchema = new mongoose.Schema(
     content_local: {
       type: Object,
       default: null,
+    },
+    is_active: {
+      type: Boolean,
+      default: true,
     },
     like_count: {
       type: Number,
@@ -54,6 +65,14 @@ const blogSchema = new mongoose.Schema(
       default: null,
     },
     category: {
+      type: String,
+      default: null,
+    },
+    last_updated_by: {
+      type: String,
+      default: null,
+    },
+    comment: {
       type: String,
       default: null,
     },

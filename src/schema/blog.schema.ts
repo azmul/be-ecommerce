@@ -6,7 +6,7 @@ export const createSchema = object({
     content: string().required("content is required"),
     creator_name: string().required("creator_name is required"),
     picture_url: string().required("picture_url is required"),
-    tags: string().required("tags is required"),
+    category: string().required("category is required"),
   }),
 });
 
@@ -16,6 +16,6 @@ export const updateSchema = object({
     content: string().required("content is required"),
     creator_name: string().required("creator_name is required"),
     picture_url: string().required("picture_url is required"),
-    tags: string().required("tags is required"),
+    category: string().required("category is required"),
   }),
 });
