@@ -141,7 +141,6 @@ export async function updateProductHandler(
   res: Response
 ) {
   const id = req.params.id;
-
   try {
     const product = await Product.findByIdAndUpdate(id, { ...req.body });
     if (!product)

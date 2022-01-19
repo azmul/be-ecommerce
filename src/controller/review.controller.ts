@@ -18,8 +18,7 @@ export async function getAllReviewsHandler(req: Request, res: Response) {
   const skips = Number(pageSize) * (Number(current) - 1);
 
   const skipFields = {
-    comment: 0,
-    last_updated_by: 0,
+    reviews: 0,
   };
 
   const query: any = {};

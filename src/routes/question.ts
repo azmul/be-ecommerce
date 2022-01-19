@@ -12,8 +12,7 @@ import {
 } from "../controller/question.controller";
 
 import { 
-    createQuestionSchema,
-    updateQuestionSchema
+    createQuestionSchema
   } from "../schema/question.schema";
 
 const router = express.Router();
@@ -31,6 +30,6 @@ router.get('/product/:id', user, asyncHandler(getQuestionByProductIdHandler));
 router.get('/:id', admin, asyncHandler(getQuestionHandler));
 
 // Update Question
-router.patch('/:id', [auth, validateRequest(updateQuestionSchema)], asyncHandler(updateQuestionHandler));
+router.patch('/:id', auth, asyncHandler(updateQuestionHandler));
 
 export default router;
