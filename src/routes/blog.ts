@@ -22,14 +22,13 @@ const router = express.Router();
 // Get recent blogs
 router.get(
   "/recent",
-  [auth, getCacheHandler(BLOGS_RECENT.duration, BLOGS_RECENT.key)],
+  getCacheHandler(BLOGS_RECENT.duration, BLOGS_RECENT.key),
   asyncHandler(getRecentBlogsHandler)
 );
 
 // Get all blogs
 router.get(
   "/",
-  [auth, getCacheHandler(BLOGS.duration, BLOGS.key)],
   asyncHandler(getAllBlogsHandler)
 );
 
@@ -37,7 +36,7 @@ router.get(
 router.get("/admin", admin, asyncHandler(getAdminAllBlogsHandler));
 
 // Get a Blog
-router.get("/:id", auth, asyncHandler(getBlogHandler));
+router.get("/:id", asyncHandler(getBlogHandler));
 
 // Create a Blog
 router.post(
@@ -45,7 +44,6 @@ router.post(
   [
     admin,
     deleteCacheHandler(BLOGS_RECENT.key),
-    deleteCacheHandler(BLOGS.key),
     validateRequest(createSchema),
   ],
   asyncHandler(createBlogHandler)
@@ -58,7 +56,6 @@ router.patch(
     validateRequest(updateSchema),
     admin,
     deleteCacheHandler(BLOGS_RECENT.key),
-    deleteCacheHandler(BLOGS.key),
   ],
   asyncHandler(updateBlogHandler)
 );
@@ -66,14 +63,14 @@ router.patch(
 // Update comments of blog
 router.post(
   "/comments/:id",
-  [auth, deleteCacheHandler(BLOGS_RECENT.key), deleteCacheHandler(BLOGS.key)],
+  [auth, deleteCacheHandler(BLOGS_RECENT.key)],
   asyncHandler(updateBlogCommentHandler)
 );
 
 // Delete a Blog
 router.delete(
   "/:id",
-  [admin, deleteCacheHandler(BLOGS_RECENT.key), deleteCacheHandler(BLOGS.key)],
+  [admin, deleteCacheHandler(BLOGS_RECENT.key)],
   asyncHandler(deleteBlogHandler)
 );
 

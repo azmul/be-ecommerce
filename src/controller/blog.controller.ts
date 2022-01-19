@@ -13,7 +13,7 @@ export async function getRecentBlogsHandler(req: Request, res: Response) {
   try {
     const blogs = await Blog.find({ is_active: true }, { content: 0 })
       .sort({ createdAt: -1 })
-      .limit(4);
+      .limit(5);
     res.status(200).send({
       data: blogs,
     });
