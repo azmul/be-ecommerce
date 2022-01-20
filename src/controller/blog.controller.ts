@@ -194,7 +194,7 @@ export async function updateBlogCommentHandler(
           customerPhone,
           comment,
           isApproved: false,
-          id: numericCode(6),
+          id: blogId,
           createdAt: new Date(),
         });
       } else {
