@@ -13,6 +13,12 @@ export interface SettingDocument extends mongoose.Document {
   twitter_link: string;
   instagram_link: string;
   pinterest_link: string;
+  bkash_number: string;
+  nagad_number: string;
+  rocket_number: string;
+  bkash_discount: number;
+  nagad_discount: number;
+  rocket_discount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -64,6 +70,30 @@ const settingSchema = new mongoose.Schema(
       default: null,
     },
     pinterest_link: {
+      type: String,
+      default: null,
+    },
+    bkash_number: {
+      type: String,
+      default: null,
+    },
+    nagad_number: {
+      type: String,
+      default: null,
+    },
+    rocket_number: {
+      type: String,
+      default: null,
+    },
+    bkash_discount: {
+      type: String,
+      default: null,
+    },
+    nagad_discount: {
+      type: String,
+      default: null,
+    },
+    rocket_discount: {
       type: String,
       default: null,
     },

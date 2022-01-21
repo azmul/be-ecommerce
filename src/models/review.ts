@@ -17,6 +17,8 @@ export interface ReviewDocument extends mongoose.Document {
 //   rating: null,
 //   id: number, 
 //   message: string,
+//   isAns: false,
+//   ans: null,
 // }
 
 const reviewSchema = new mongoose.Schema({

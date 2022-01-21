@@ -13,7 +13,7 @@ export async function getAllReviewsHandler(req: Request, res: Response) {
     current = 1,
     pageSize = API.DEFAULT_DATA_PER_PAGE,
     startDate,
-    endDate
+    endDate,
   } = req.query;
   const skips = Number(pageSize) * (Number(current) - 1);
 
@@ -25,7 +25,7 @@ export async function getAllReviewsHandler(req: Request, res: Response) {
   if (startDate && endDate) {
     const start: any = startDate;
     const end: any = endDate;
-    if(start && end) {
+    if (start && end) {
       query.updatedAt = {
         $gte: new Date(start),
         $lt: new Date(end),
@@ -56,7 +56,7 @@ export async function getAllReviewsHandler(req: Request, res: Response) {
 export async function getReviewByProductIdHandler(req: Request, res: Response) {
   const id = req.params.id;
   try {
-    const review =  await Review.findOne({product_numeric_id: Number(id)});
+    const review = await Review.findOne({ product_numeric_id: Number(id) });
     res.status(200).send(review);
   } catch (err: any) {
     log.error(err);
@@ -65,32 +65,31 @@ export async function getReviewByProductIdHandler(req: Request, res: Response) {
 }
 
 export async function getReviewHandler(req: Request, res: Response) {
-    const id = req.params.id;
-    try {
-      const review =  await Review.findById(id);
-      res.status(200).send(review);
-    } catch (err: any) {
-      log.error(err);
-      res.status(400).send({ status: 400, message: err?.message });
-    }
+  const id = req.params.id;
+  try {
+    const review = await Review.findById(id);
+    res.status(200).send(review);
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
+  }
 }
 
 export async function createReviewHandler(
-    req: IGetUserAuthInfoRequest,
-    res: Response
-  ) {
-    try {
-  
-      const review = new Review({
-        ...req.body,
-        id: numericCode(14)
-      });
-      await review.save();
-      res.status(201).send({ message: "Review Created", status: 201 });
-    } catch (err: any) {
-      log.error(err);
-      res.status(400).send({ status: 400, message: err?.message });
-    }
+  req: IGetUserAuthInfoRequest,
+  res: Response
+) {
+  try {
+    const review = new Review({
+      ...req.body,
+      id: numericCode(14),
+    });
+    await review.save();
+    res.status(201).send({ message: "Review Created", status: 201 });
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
+  }
 }
 
 export async function updateReviewHandler(
@@ -100,25 +99,52 @@ export async function updateReviewHandler(
   const id = req.params.id;
 
   try {
-    const { reviewId, customerPhone, customerName, rating, isApproved, message, isDeleted } = req.body;
+    const {
+      ans,
+      reviewId,
+      customerPhone,
+      customerName,
+      rating,
+      isApproved,
+      message,
+      isDeleted,
+    } = req.body;
 
     const item = await Review.findById(id);
     if (!item)
       return res.status(404).send("The review with the given id was not found");
     const reviews: any = item.reviews;
 
-    const reviewIndex = reviews.findIndex((review: any) => Number(review.id) === Number(reviewId))
+    const reviewIndex = reviews.findIndex(
+      (review: any) => Number(review.id) === Number(reviewId)
+    );
 
-    if(!!isDeleted && reviewIndex !== -1) {
-        reviews.splice(reviewIndex, 1);
+    if (!!isDeleted && reviewIndex !== -1) {
+      reviews.splice(reviewIndex, 1);
     } else {
-        if(reviewIndex === -1) {
-            reviews.unshift({ customerName, customerPhone, message, rating, isApproved: false, id: numericCode(6), createdAt: new Date() })
-        } else {
-            if(isApproved) {
-                reviews[reviewIndex].isApproved = true;
-            }
+      if (reviewIndex === -1) {
+        reviews.unshift({
+          customerName,
+          ansTime: null,
+          isAns: false,
+          ans: null,
+          customerPhone,
+          message,
+          rating,
+          isApproved: false,
+          id: numericCode(6),
+          createdAt: new Date(),
+        });
+      } else {
+        if (ans) {
+          reviews[reviewIndex].isAns = true;
+          reviews[reviewIndex].ans = ans;
+          reviews[reviewIndex].ansTime = new Date();
         }
+        if (isApproved) {
+          reviews[reviewIndex].isApproved = true;
+        }
+      }
     }
 
     await Review.findByIdAndUpdate(id, { reviews: reviews });
@@ -128,4 +154,3 @@ export async function updateReviewHandler(
     res.status(400).send({ status: 400, message: err?.message });
   }
 }
-

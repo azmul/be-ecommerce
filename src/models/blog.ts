@@ -12,6 +12,7 @@ export interface BlogDocument extends mongoose.Document {
   comment: string;
   last_updated_by: string;
   is_active: boolean;
+  product_url: string;
   comments: Array<Object>;
   createdAt: Date;
   updatedAt: Date;
@@ -57,6 +58,10 @@ const blogSchema = new mongoose.Schema(
       default: 0,
     },
     creator_name: {
+      type: String,
+      default: null,
+    },
+    product_url: {
       type: String,
       default: null,
     },

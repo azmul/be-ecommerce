@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 // Get all Setting
-router.get('/',   [admin, getCacheHandler(SETTING.duration, SETTING.key)],
+router.get('/',   getCacheHandler(SETTING.duration, SETTING.key),
 asyncHandler(getSettingHandler));
 
  // Create a Setting

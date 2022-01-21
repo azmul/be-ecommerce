@@ -24,6 +24,9 @@ export interface ProductDocument extends mongoose.Document {
   fullDescription_local: string;
   id: number;
   is_active: boolean;
+  is_normal_sell: boolean;
+  is_flash_sell: boolean;
+  is_campaign_sell: boolean;
   comment: string;
   last_updated_by: string;
   stock: number;
@@ -139,6 +142,18 @@ const ProduuctSchema = new mongoose.Schema(
     stock: {
       type: Number,
       default: 10,
+    },
+    is_normal_sell: {
+      type: Boolean,
+      default: true,
+    },
+    is_flash_sell: {
+      type: Boolean,
+      default: false,
+    },
+    is_campaign_sell: {
+      type: Boolean,
+      default: false,
     }
   },
   { timestamps: true, versionKey: false }
