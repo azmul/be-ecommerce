@@ -162,11 +162,11 @@ export async function updateBlogCommentHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const id = req.params.id;
+  const blogId = req.params.id;
 
   try {
     const {
-      blogId,
+      id,
       customerPhone,
       customerName,
       isApproved,
@@ -174,7 +174,7 @@ export async function updateBlogCommentHandler(
       isDeleted,
     } = req.body;
 
-    const item = await Blog.findById(id);
+    const item = await Blog.findById(blogId);
     if (!item)
       return res
         .status(404)
@@ -182,21 +182,30 @@ export async function updateBlogCommentHandler(
     const comments: any = cloneDeep(item.comments);
 
     const commentsIndex = comments.findIndex(
-      (blog: any) => Number(blog.id) === Number(blogId)
+      (blog: any) => Number(blog.id) === Number(id)
     );
 
     if (!!isDeleted) {
-      comments.splice(commentsIndex, 1);
+      if(commentsIndex !== -1) {
+        comments.splice(commentsIndex, 1);
+      } else {
+        res.status(400).send({ message: "Not Deleted"});
+      }
     } else {
       if (commentsIndex === -1) {
-        comments.unshift({
-          customerName,
-          customerPhone,
-          comment,
-          isApproved: false,
-          id: blogId,
-          createdAt: new Date(),
-        });
+        if(customerName && customerPhone && comment && id) {
+          comments.unshift({
+            customerName,
+            customerPhone,
+            comment,
+            isApproved: false,
+            id,
+            createdAt: new Date(),
+          });
+        }else {
+          res.status(400).send({ message: "Bad Request"});
+        }
+        
       } else {
         comments[commentsIndex].comment = comment;
         if (isApproved) {
@@ -204,7 +213,7 @@ export async function updateBlogCommentHandler(
         }
       }
     }
-    await Blog.findByIdAndUpdate(id, { comments: comments });
+    await Blog.findByIdAndUpdate(blogId, { comments: comments });
     res.status(200).send({ message: "comment Updated" });
   } catch (err: any) {
     log.error(err);

@@ -96,12 +96,12 @@ export async function updateReviewHandler(
   req: IGetUserAuthInfoRequest,
   res: Response
 ) {
-  const id = req.params.id;
+  const reviewId = req.params.id;
 
   try {
     const {
       ans,
-      reviewId,
+      id,
       customerPhone,
       customerName,
       rating,
@@ -110,31 +110,39 @@ export async function updateReviewHandler(
       isDeleted,
     } = req.body;
 
-    const item = await Review.findById(id);
+    const item = await Review.findById(reviewId);
     if (!item)
       return res.status(404).send("The review with the given id was not found");
     const reviews: any = item.reviews;
 
     const reviewIndex = reviews.findIndex(
-      (review: any) => Number(review.id) === Number(reviewId)
+      (review: any) => Number(review.id) === Number(id)
     );
 
-    if (!!isDeleted && reviewIndex !== -1) {
-      reviews.splice(reviewIndex, 1);
+    if (!!isDeleted) {
+      if (reviewIndex !== -1) {
+        reviews.splice(reviewIndex, 1);
+      } else {
+        res.status(400).send({ message: "Not Deleted" });
+      }
     } else {
       if (reviewIndex === -1) {
-        reviews.unshift({
-          customerName,
-          ansTime: null,
-          isAns: false,
-          ans: null,
-          customerPhone,
-          message,
-          rating,
-          isApproved: false,
-          id: numericCode(6),
-          createdAt: new Date(),
-        });
+        if (customerName && customerPhone && message && reviewId) {
+          reviews.unshift({
+            customerName,
+            ansTime: null,
+            isAns: false,
+            ans: null,
+            customerPhone,
+            message,
+            rating,
+            isApproved: false,
+            id,
+            createdAt: new Date(),
+          });
+        } else {
+          res.status(400).send({ message: "Bad Request" });
+        }
       } else {
         if (ans) {
           reviews[reviewIndex].isAns = true;
@@ -147,7 +155,7 @@ export async function updateReviewHandler(
       }
     }
 
-    await Review.findByIdAndUpdate(id, { reviews: reviews });
+    await Review.findByIdAndUpdate(reviewId, { reviews: reviews });
     res.status(200).send({ message: "review Updated" });
   } catch (err: any) {
     log.error(err);
