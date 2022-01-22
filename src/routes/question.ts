@@ -24,7 +24,7 @@ router.get("/", admin, asyncHandler(getAllQuestionsHandler));
 router.post("/", [validateRequest(createQuestionSchema), user] , asyncHandler(createQuestionHandler));
 
 // Get a Question by Product Id
-router.get('/product/:id', user, asyncHandler(getQuestionByProductIdHandler));
+router.get('/product/:id', asyncHandler(getQuestionByProductIdHandler));
 
 // Get a Question Id
 router.get('/:id', admin, asyncHandler(getQuestionHandler));

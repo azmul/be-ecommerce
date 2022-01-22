@@ -23,7 +23,7 @@ router.get("/", admin, asyncHandler(getAllReviewsHandler));
 router.post("/", [validateRequest(createReviewSchema), user] , asyncHandler(createReviewHandler));
 
 // Get a Review by Product Id
-router.get('/product/:id', user, asyncHandler(getReviewByProductIdHandler));
+router.get('/product/:id', asyncHandler(getReviewByProductIdHandler));
 
 // Get a Review Id
 router.get('/:id', admin, asyncHandler(getReviewHandler));
