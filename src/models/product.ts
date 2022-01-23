@@ -22,6 +22,7 @@ export interface ProductDocument extends mongoose.Document {
   fullDescription: string;
   leftSide: Array<object>;
   rightSide: Array<object>;
+  youtubeLink: string;
   id: number;
   is_active: boolean;
   is_normal_sell: boolean;
@@ -113,6 +114,10 @@ const ProduuctSchema = new mongoose.Schema(
       default: null,
     },
     fullDescription: {
+      type: String,
+      default: null,
+    },
+    youtubeLink: {
       type: String,
       default: null,
     },
