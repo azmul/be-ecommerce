@@ -5,11 +5,8 @@ export interface ProductDocument extends mongoose.Document {
   name: string;
   name_local: string;
   price: number;
-  price_local: string;
   discount: number;
-  discount_local: string;
   offerEnd: string;
-  offerEnd_local: string;
   new: boolean;
   rating: number;
   saleCount: number;
@@ -21,8 +18,10 @@ export interface ProductDocument extends mongoose.Document {
   condition: string;
   shortDescription: string;
   shortDescription_local: string;
+  fullDescriptionTitle: string;
   fullDescription: string;
-  fullDescription_local: string;
+  leftSide: Array<object>;
+  rightSide: Array<object>;
   id: number;
   is_active: boolean;
   is_normal_sell: boolean;
@@ -53,23 +52,11 @@ const ProduuctSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
-    price_local: {
-      type: String,
-      default: null,
-    },
     discount: {
       type: Number,
       default: null,
     },
-    discount_local: {
-      type: String,
-      default: null,
-    },
     offerEnd: {
-      type: String,
-      default: null,
-    },
-    offerEnd_local: {
       type: String,
       default: null,
     },
@@ -121,14 +108,22 @@ const ProduuctSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    fullDescriptionTitle: {
+      type: String,
+      default: null,
+    },
     fullDescription: {
       type: String,
       default: null,
     },
-    fullDescription_local: {
-      type: String,
+    leftSide: [{
+      type: Object,
       default: null,
-    },
+    }],
+    rightSide: [{
+      type: Object,
+      default: null,
+    }],
     id: {
         type: Number,
     },

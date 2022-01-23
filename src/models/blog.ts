@@ -4,6 +4,8 @@ export interface BlogDocument extends mongoose.Document {
   title_local: string;
   content: string;
   content_local: string;
+  content_items: Array<object>;
+  admin_message: string;
   creator_name: string;
   like_count: number;
   picture_url: string;
@@ -46,6 +48,14 @@ const blogSchema = new mongoose.Schema(
       default: null,
     },
     content_local: {
+      type: Object,
+      default: null,
+    },
+    content_items: [{
+      type: Object,
+      default: null,
+    }],
+    admin_message: {
       type: Object,
       default: null,
     },
