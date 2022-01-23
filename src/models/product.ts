@@ -18,6 +18,7 @@ export interface ProductDocument extends mongoose.Document {
   variation: Array<object>;
   image: Array<string>;
   images: Array<object>;
+  condition: string;
   shortDescription: string;
   shortDescription_local: string;
   fullDescription: string;
@@ -108,6 +109,10 @@ const ProduuctSchema = new mongoose.Schema(
           type: Object,
         },
       ],
+    condition: {
+      type: String,
+      default: null,
+    },
     shortDescription: {
       type: String,
       default: null,
