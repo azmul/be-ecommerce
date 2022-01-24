@@ -75,7 +75,7 @@ export async function getAllProducts(req: Request, res: Response) {
   const searchQuery: any = {};
 
   if (name) {
-    searchQuery.name = {$regex: name, $options: 'i'}
+    searchQuery.name = { $regex: name, $options: "i" };
   }
   if (category) {
     searchQuery.category = [category];
@@ -84,7 +84,7 @@ export async function getAllProducts(req: Request, res: Response) {
     searchQuery.tag = [tag];
   }
 
-  const skipFields = { 
+  const skipFields = {
     comment: 0,
     images: 0,
     updatedAt: 0,
@@ -92,10 +92,9 @@ export async function getAllProducts(req: Request, res: Response) {
   };
 
   try {
-    const products = await Product.find(
-      searchQuery,
-      skipFields
-    ).sort({ updatedAt: -1 });
+    const products = await Product.find(searchQuery, skipFields).sort({
+      updatedAt: -1,
+    });
     const total = await Product.find(searchQuery).countDocuments();
 
     res.status(200).send({
@@ -110,7 +109,7 @@ export async function getAllProducts(req: Request, res: Response) {
 }
 
 export async function getCollectionsAllProducts(req: Request, res: Response) {
-  const skipFields = { 
+  const skipFields = {
     comment: 0,
     images: 0,
     updatedAt: 0,
@@ -119,12 +118,12 @@ export async function getCollectionsAllProducts(req: Request, res: Response) {
 
   try {
     const products = await Product.find(
-      {isCollectionPage: true},
+      { isCollectionPage: true },
       skipFields
     ).sort({ updatedAt: -1 });
 
     res.status(200).send({
-      data: products
+      data: products,
     });
   } catch (error) {
     res.status(500).send({ status: 500, message: error });
