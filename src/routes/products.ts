@@ -5,6 +5,7 @@ import { getCacheHandler, deleteCacheHandler } from "../utils/routeCache";
 import { CUSTOMER_PRODUCTS } from "../constant/cacheKeys";
 
 import {
+  getHomeAllProducts,
   getAdminAllProducts,
   getAllProducts,
   createProductHandler,
@@ -17,10 +18,13 @@ const router = express.Router();
 
 // Get all products
 router.get(
-  "/",
+  "/home",
   getCacheHandler(CUSTOMER_PRODUCTS.duration, CUSTOMER_PRODUCTS.key),
-  asyncHandler(getAllProducts)
+  asyncHandler(getHomeAllProducts)
 );
+
+// Get all products
+router.get("/", asyncHandler(getAllProducts));
 
 // Get all products admin
 router.get("/admin", admin, asyncHandler(getAdminAllProducts));

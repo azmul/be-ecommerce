@@ -1,8 +1,6 @@
 import express from "express"
 import asyncHandler from  'express-async-handler'
 import {admin} from  '../middleware'
-import { getCacheHandler, deleteCacheHandler } from "../utils/routeCache";
-import { PRODUCT_TAG } from "../constant/cacheKeys";
 
 import {
    getTagsHandler,
@@ -16,22 +14,22 @@ import {
 const router = express.Router();
 
 // Get all tags
-router.get('/all',   getCacheHandler(PRODUCT_TAG.duration, PRODUCT_TAG.key),
+router.get('/all', 
 asyncHandler(getAllTagsHandler));
 
 // Get tags
-router.get('/', getCacheHandler(PRODUCT_TAG.duration, PRODUCT_TAG.key), asyncHandler(getTagsHandler));
+router.get('/',  asyncHandler(getTagsHandler));
 
 // Get a tag
-router.get('/:id', [admin, deleteCacheHandler(PRODUCT_TAG.key)], asyncHandler(getTagHandler));
+router.get('/:id', [admin], asyncHandler(getTagHandler));
 
  // Create a tag
-router.post('/', [admin, deleteCacheHandler(PRODUCT_TAG.key)], asyncHandler(createTagHandler));
+router.post('/', [admin], asyncHandler(createTagHandler));
 
 // Update tag
-router.patch('/:id', [admin, deleteCacheHandler(PRODUCT_TAG.key)], asyncHandler(updateTagHandler));
+router.patch('/:id', [admin], asyncHandler(updateTagHandler));
 
 // Delete tag
-router.delete('/:id', [admin, deleteCacheHandler(PRODUCT_TAG.key)], asyncHandler(deleteTagHandler));
+router.delete('/:id', [admin], asyncHandler(deleteTagHandler));
 
 export default router; 

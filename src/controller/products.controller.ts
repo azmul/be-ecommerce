@@ -11,10 +11,14 @@ import Question from "../models/questions";
 const ObjectId: any = mongodb.ObjectId;
 
 export async function getAdminAllProducts(req: Request, res: Response) {
-
-  const { current = 1, pageSize = API.DEFAULT_DATA_PER_PAGE, startDate, endDate } = req.query;
+  const {
+    current = 1,
+    pageSize = API.DEFAULT_DATA_PER_PAGE,
+    startDate,
+    endDate,
+  } = req.query;
   const skips = Number(pageSize) * (Number(current) - 1);
-  
+
   const skipFields = {
     category: 0,
     discount: 0,
@@ -31,13 +35,13 @@ export async function getAdminAllProducts(req: Request, res: Response) {
     tag: 0,
     variation: 0,
     last_updated_by: 0,
-  }; 
+  };
 
   const query: any = {};
   if (startDate && endDate) {
     const start: any = startDate;
     const end: any = endDate;
-    if(start && end) {
+    if (start && end) {
       query.updatedAt = {
         $gte: new Date(start),
         $lt: new Date(end),
@@ -46,7 +50,10 @@ export async function getAdminAllProducts(req: Request, res: Response) {
   }
 
   try {
-    const products = await Product.find(query, skipFields).sort({updatedAt: -1}).skip(skips).limit(Number(pageSize));
+    const products = await Product.find(query, skipFields)
+      .sort({ updatedAt: -1 })
+      .skip(skips)
+      .limit(Number(pageSize));
     const total = await Product.find(query).countDocuments();
 
     res.status(200).send({
@@ -63,21 +70,60 @@ export async function getAdminAllProducts(req: Request, res: Response) {
 }
 
 export async function getAllProducts(req: Request, res: Response) {
-  const skipFields = {
+  const { category, tag, name } = req.query;
+
+  const query: any = {};
+
+  if (name) {
+    query.name = new RegExp('^' +name , 'i');
+  }
+
+  if (category) {
+    query.category = [category];
+  }
+  if (tag) {
+    query.tag = [tag];
+  }
+
+  const skipFields = { 
     comment: 0,
     images: 0,
     updatedAt: 0,
     createdAt: 0,
-  }; 
+  };
+
   try {
-    const products = await Product.find({}, skipFields).sort({createdAt: -1});
-    const total = await Product.find().countDocuments();
+    const products = await Product.find(
+      query,
+      skipFields
+    ).sort({ updatedAt: -1 });
+    const total = await Product.find(query).countDocuments();
 
     res.status(200).send({
       data: products,
       pagination: {
         total: total,
       },
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
+export async function getHomeAllProducts(req: Request, res: Response) {
+  const skipFields = {
+    comment: 0,
+    images: 0,
+    updatedAt: 0,
+    createdAt: 0,
+    isHomePage: 0,
+  };
+  try {
+    const products = await Product.find({ isHomePage: true }, skipFields).sort({
+      updatedAt: -1,
+    });
+    res.status(200).send({
+      data: products,
     });
   } catch (error) {
     res.status(500).send({ status: 500, message: error });
@@ -96,18 +142,18 @@ export async function createProductHandler(
       product_numeric_id: product.id,
       product_name: product.name,
       product_id: product._id,
-      product_image: product.image[0]
-    }
+      product_image: product.image[0],
+    };
 
     const review = new Review({
       ...productInfo,
-      id: numericCode(14)
+      id: numericCode(14),
     });
     await review.save();
 
     const question = new Question({
       ...productInfo,
-      id: numericCode(14)
+      id: numericCode(14),
     });
     await question.save();
 
