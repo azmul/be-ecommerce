@@ -2,9 +2,13 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import { admin } from "../middleware";
 import { getCacheHandler, deleteCacheHandler } from "../utils/routeCache";
-import { CUSTOMER_PRODUCTS } from "../constant/cacheKeys";
+import {
+  CUSTOMER_PRODUCTS,
+  CUSTOMER_PRODUCTS_COLLECTION,
+} from "../constant/cacheKeys";
 
 import {
+  getCollectionsAllProducts,
   getHomeAllProducts,
   getAdminAllProducts,
   getAllProducts,
@@ -21,6 +25,16 @@ router.get(
   "/home",
   getCacheHandler(CUSTOMER_PRODUCTS.duration, CUSTOMER_PRODUCTS.key),
   asyncHandler(getHomeAllProducts)
+);
+
+// Get all products
+router.get(
+  "/collection",
+  getCacheHandler(
+    CUSTOMER_PRODUCTS_COLLECTION.duration,
+    CUSTOMER_PRODUCTS_COLLECTION.key
+  ),
+  asyncHandler(getCollectionsAllProducts)
 );
 
 // Get all products

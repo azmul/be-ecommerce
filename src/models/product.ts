@@ -17,6 +17,7 @@ export interface ProductDocument extends mongoose.Document {
   images: Array<object>;
   condition: string;
   isHomePage: boolean;
+  isCollectionPage: boolean;
   shortDescription: string;
   shortDescription_local: string;
   fullDescriptionTitle: string;
@@ -105,6 +106,10 @@ const ProduuctSchema = new mongoose.Schema(
     isHomePage: {
        type: Boolean,
        default: false,
+    },
+    isCollectionPage: {
+      type: Boolean,
+      default: true,
     },
     shortDescription: {
       type: String,

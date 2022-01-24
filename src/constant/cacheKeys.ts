@@ -3,6 +3,7 @@ export const CUSTOMER_PRODUCTS = {
   duration: 100000,
 };
 export const CUSTOMER_SLIDERS = { key: "customer_sliders", duration: 100000 };
+export const CUSTOMER_PRODUCTS_COLLECTION = { key: "customer_products_collection", duration: 100000 };
 export const CUSTOMER_TESTIMONIAL = {
   key: "customer_testimonial",
   duration: 100000,
