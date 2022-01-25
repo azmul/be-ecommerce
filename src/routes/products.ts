@@ -46,7 +46,7 @@ router.get("/admin", admin, asyncHandler(getAdminAllProducts));
 // Create a Product
 router.post(
   "/",
-  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key)],
+  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key), deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key)],
   asyncHandler(createProductHandler)
 );
 
@@ -56,14 +56,14 @@ router.get("/:id", admin, asyncHandler(getProductHandler));
 // Update Product
 router.patch(
   "/:id",
-  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key)],
+  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key), deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key)],
   asyncHandler(updateProductHandler)
 );
 
 // Delete tag
 router.delete(
   "/:id",
-  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key)],
+  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key), deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key)],
   asyncHandler(deleteProductHandler)
 );
 
