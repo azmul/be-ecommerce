@@ -4,6 +4,9 @@ export const CUSTOMER_PRODUCTS = {
 };
 export const CUSTOMER_SLIDERS = { key: "customer_sliders", duration: 100000 };
 export const CUSTOMER_PRODUCTS_COLLECTION = { key: "customer_products_collection", duration: 100000 };
+export const CUSTOMER_PRODUCTS_CAMPAIGN = { key: "customer_products_campaign", duration: 100000 };
+export const CUSTOMER_PRODUCTS_FLASH = { key: "customer_products_flash", duration: 100000 };
+
 export const CUSTOMER_TESTIMONIAL = {
   key: "customer_testimonial",
   duration: 100000,

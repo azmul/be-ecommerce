@@ -5,9 +5,13 @@ import { getCacheHandler, deleteCacheHandler } from "../utils/routeCache";
 import {
   CUSTOMER_PRODUCTS,
   CUSTOMER_PRODUCTS_COLLECTION,
+  CUSTOMER_PRODUCTS_CAMPAIGN,
+  CUSTOMER_PRODUCTS_FLASH,
 } from "../constant/cacheKeys";
 
 import {
+  getFlashAllProducts,
+  getCampaignAllProducts,
   getCollectionsAllProducts,
   getHomeAllProducts,
   getAdminAllProducts,
@@ -37,6 +41,26 @@ router.get(
   asyncHandler(getCollectionsAllProducts)
 );
 
+// Get all campaing products
+router.get(
+  "/campaign",
+  getCacheHandler(
+    CUSTOMER_PRODUCTS_CAMPAIGN.duration,
+    CUSTOMER_PRODUCTS_CAMPAIGN.key
+  ),
+  asyncHandler(getCampaignAllProducts)
+);
+
+// Get all flash products
+router.get(
+  "/flash",
+  getCacheHandler(
+    CUSTOMER_PRODUCTS_FLASH.duration,
+    CUSTOMER_PRODUCTS_FLASH.key
+  ),
+  asyncHandler(getFlashAllProducts)
+);
+
 // Get all products
 router.get("/", asyncHandler(getAllProducts));
 
@@ -46,7 +70,13 @@ router.get("/admin", admin, asyncHandler(getAdminAllProducts));
 // Create a Product
 router.post(
   "/",
-  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key), deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key)],
+  [
+    admin,
+    deleteCacheHandler(CUSTOMER_PRODUCTS.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_FLASH.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_CAMPAIGN.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key),
+  ],
   asyncHandler(createProductHandler)
 );
 
@@ -56,14 +86,26 @@ router.get("/:id", admin, asyncHandler(getProductHandler));
 // Update Product
 router.patch(
   "/:id",
-  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key), deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key)],
+  [
+    admin,
+    deleteCacheHandler(CUSTOMER_PRODUCTS.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_FLASH.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_CAMPAIGN.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key),
+  ],
   asyncHandler(updateProductHandler)
 );
 
 // Delete tag
 router.delete(
   "/:id",
-  [admin, deleteCacheHandler(CUSTOMER_PRODUCTS.key), deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key)],
+  [
+    admin,
+    deleteCacheHandler(CUSTOMER_PRODUCTS.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_FLASH.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_CAMPAIGN.key),
+    deleteCacheHandler(CUSTOMER_PRODUCTS_COLLECTION.key),
+  ],
   asyncHandler(deleteProductHandler)
 );
 

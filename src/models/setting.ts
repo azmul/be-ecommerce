@@ -19,6 +19,8 @@ export interface SettingDocument extends mongoose.Document {
   bkash_discount: number;
   nagad_discount: number;
   rocket_discount: number;
+  is_campaign_sell: boolean;
+  is_flash_sell: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -97,6 +99,14 @@ const settingSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    is_campaign_sell: {
+      type: Boolean,
+      default: false,
+    },
+    is_flash_sell: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true, versionKey: false }
 );

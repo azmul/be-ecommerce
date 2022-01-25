@@ -130,6 +130,50 @@ export async function getCollectionsAllProducts(req: Request, res: Response) {
   }
 }
 
+export async function getCampaignAllProducts(req: Request, res: Response) {
+  const skipFields = {
+    comment: 0,
+    images: 0,
+    updatedAt: 0,
+    createdAt: 0,
+  };
+
+  try {
+    const products = await Product.find(
+      { is_campaign_sell: true },
+      skipFields
+    ).sort({ updatedAt: -1 });
+
+    res.status(200).send({
+      data: products,
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
+export async function getFlashAllProducts(req: Request, res: Response) {
+  const skipFields = {
+    comment: 0,
+    images: 0,
+    updatedAt: 0,
+    createdAt: 0,
+  };
+
+  try {
+    const products = await Product.find(
+      { is_flash_sell: true },
+      skipFields
+    ).sort({ updatedAt: -1 });
+
+    res.status(200).send({
+      data: products,
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
 export async function getHomeAllProducts(req: Request, res: Response) {
   const skipFields = {
     comment: 0,
