@@ -51,6 +51,11 @@ export async function loginAdminHandler(req: Request, res: Response) {
   try {
     const { phone, password } = req.body;
     const admin = await Admin.findOne({ phone });
+    if(admin && !admin.is_approved) {
+      return res
+      .status(400)
+      .send({ status: 400, message: "Please contact with admin to login" });
+    }
     if (!admin)
       return res
         .status(400)
