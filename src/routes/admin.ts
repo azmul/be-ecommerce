@@ -3,6 +3,7 @@ import express from "express";
 import {validateRequest, admin} from  '../middleware'
 import asyncHandler from  'express-async-handler'
 import { 
+  getAdminHandler,
  registerAdminHandler,
  loginAdminHandler,
  recoverPasswordAdminHandler,
@@ -16,6 +17,9 @@ import {
 } from "../schema/common.schema";
 
 const router = express.Router();
+
+// Admin Register  
+router.get('/', admin, asyncHandler(getAdminHandler));
 
 // Admin Register  
 router.post('/register', validateRequest(registerSchema), asyncHandler(registerAdminHandler));

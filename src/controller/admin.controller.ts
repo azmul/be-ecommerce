@@ -6,21 +6,40 @@ import Admin from "../models/admin";
 import bcrypt from "bcrypt";
 import ROLE from "../constant/roleConstant";
 
+export async function getAdminHandler(req: Request, res: Response) {
+  try {
+    const admins = await Admin.find()
+      .sort({ createdAt: -1 })
+    res.status(200).send({
+      data: admins,
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
 export async function registerAdminHandler(req: Request, res: Response) {
   try {
     const { name, phone, password } = req.body;
+
+    const admin = await Admin.findOne({ phone });
+    if (admin)
+      return res
+        .status(400)
+        .send({ status: 400, message: "You already registered." });
+
     if (name && phone && password) {
-      let admin = new Admin({ name, phone, password, role: ROLE.ADMIN_ROLE });
+      let admin = new Admin({ ...req.body, role: ROLE.ADMIN_ROLE, is_approved: false });
 
       const salt = await bcrypt.genSalt(10);
       admin.password = await bcrypt.hash(password, salt);
 
       await admin.save();
 
-      const response = pick(admin, ["_id", "name", "phone", "role"]);
+      const response = pick(admin, ["name", "phone"]);
       res.status(201).send(response);
     } else {
-      res.status(400).send({ status: 400, message: "Not Valid" });
+      res.status(400).send({ status: 400, message: "Not Valid Information" });
     }
   } catch (err: any) {
     log.error(err);
@@ -31,7 +50,7 @@ export async function registerAdminHandler(req: Request, res: Response) {
 export async function loginAdminHandler(req: Request, res: Response) {
   try {
     const { phone, password } = req.body;
-    let admin = await Admin.findOne({ phone });
+    const admin = await Admin.findOne({ phone });
     if (!admin)
       return res
         .status(400)
@@ -49,7 +68,7 @@ export async function loginAdminHandler(req: Request, res: Response) {
       .header("x-auth-token", token)
       .status(200)
       .send({
-        data: pick(admin, ["_id", "name", "phone", "is_active", "role"]),
+        data: pick(admin, ["_id", "name", "phone", "is_approved", "role"]),
         token,
       });
   } catch (err: any) {
@@ -64,14 +83,14 @@ export async function recoverPasswordAdminHandler(
 ) {
   try {
     const { phone, password } = req.body;
-    const doctor = await Admin.findOne({ phone });
-    if (!doctor)
+    const admin = await Admin.findOne({ phone });
+    if (!admin)
       return res.status(400).send({ message: "Phone Number not found" });
 
     const salt = await bcrypt.genSalt(10);
     const newPassword = await bcrypt.hash(password, salt);
 
-    await Admin.findByIdAndUpdate(doctor._id, { password: newPassword });
+    await Admin.findByIdAndUpdate(admin._id, { password: newPassword });
     res.status(200).send({ status: 200, phone });
   } catch (err: any) {
     log.error(err);
@@ -95,11 +114,11 @@ export async function changePasswordAdminHandler(
       });
     }
 
-    let doctor = await Admin.findOne({ phone });
-    if (!doctor)
-      return res.status(404).send({ status: 404, message: "Doctor not found" });
+    let admin = await Admin.findOne({ phone });
+    if (!admin)
+      return res.status(404).send({ status: 404, message: "admin not found" });
 
-    const isCurrent = await bcrypt.compare(current, doctor.password);
+    const isCurrent = await bcrypt.compare(current, admin.password);
 
     if (!isCurrent) {
       res
@@ -107,7 +126,7 @@ export async function changePasswordAdminHandler(
         .send({ status: 400, message: "Providing Current password is wrong" });
     }
 
-    const isSame = await bcrypt.compare(password, doctor.password);
+    const isSame = await bcrypt.compare(password, admin.password);
 
     if (isSame) {
       res
