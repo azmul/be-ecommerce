@@ -108,6 +108,26 @@ export async function getAllProducts(req: Request, res: Response) {
   }
 }
 
+export async function getProducts(req: Request, res: Response) {
+  const skipFields = {
+    comment: 0,
+    images: 0,
+    updatedAt: 0,
+    createdAt: 0,
+  };
+
+  try {
+    const products = await Product.find(
+    ).sort({ updatedAt: -1 });
+
+    res.status(200).send({
+      data: products,
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
 export async function getCollectionsAllProducts(req: Request, res: Response) {
   const skipFields = {
     comment: 0,

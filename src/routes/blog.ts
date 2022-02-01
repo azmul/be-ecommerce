@@ -2,9 +2,10 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import { admin, auth, validateRequest } from "../middleware";
 import { getCacheHandler, deleteCacheHandler } from "../utils/routeCache";
-import { BLOGS, BLOGS_RECENT } from "../constant/cacheKeys";
+import { BLOGS_RECENT } from "../constant/cacheKeys";
 
 import {
+  getBlogsHandler,
   getAdminAllBlogsHandler,
   getRecentBlogsHandler,
   getAllBlogsHandler,
@@ -30,6 +31,12 @@ router.get(
 router.get(
   "/",
   asyncHandler(getAllBlogsHandler)
+);
+
+// Get all 
+router.get(
+  "/all",
+  asyncHandler(getBlogsHandler)
 );
 
 // Get all admin

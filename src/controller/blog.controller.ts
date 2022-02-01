@@ -109,6 +109,27 @@ export async function getAllBlogsHandler(req: Request, res: Response) {
   }
 }
 
+export async function getBlogsHandler(req: Request, res: Response) {
+  const skipFields = {
+    comment: 0,
+    last_updated_by: 0,
+    updatedAt: 0,
+    comments: 0,
+    like_count: 0,
+  };
+  try {
+    const blogs = await Blog.find({ is_active: true }, skipFields)
+      .sort({ updatedAt: -1 });
+    const total = await Blog.find().countDocuments();
+
+    res.status(200).send({
+      data: blogs
+    });
+  } catch (error) {
+    res.status(500).send({ status: 500, message: error });
+  }
+}
+
 export async function getBlogHandler(req: Request, res: Response) {
   const id = req.params.id;
 

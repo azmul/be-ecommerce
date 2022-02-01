@@ -10,6 +10,7 @@ import {
 } from "../constant/cacheKeys";
 
 import {
+  getProducts,
   getFlashAllProducts,
   getCampaignAllProducts,
   getCollectionsAllProducts,
@@ -29,6 +30,12 @@ router.get(
   "/home",
   getCacheHandler(CUSTOMER_PRODUCTS.duration, CUSTOMER_PRODUCTS.key),
   asyncHandler(getHomeAllProducts)
+);
+
+// Get all products
+router.get(
+  "/all",
+  asyncHandler(getProducts)
 );
 
 // Get all products
@@ -81,7 +88,7 @@ router.post(
 );
 
 // Get a Product
-router.get("/:id", admin, asyncHandler(getProductHandler));
+router.get("/:id", asyncHandler(getProductHandler));
 
 // Update Product
 router.patch(
