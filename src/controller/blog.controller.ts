@@ -13,7 +13,7 @@ export async function getRecentBlogsHandler(req: Request, res: Response) {
   try {
     const blogs = await Blog.find({ is_active: true }, { content: 0 })
       .sort({ createdAt: -1 })
-      .limit(5);
+      .limit(10);
     res.status(200).send({
       data: blogs,
     });
@@ -123,7 +123,8 @@ export async function getBlogsHandler(req: Request, res: Response) {
     const total = await Blog.find().countDocuments();
 
     res.status(200).send({
-      data: blogs
+      data: blogs,
+      total
     });
   } catch (error) {
     res.status(500).send({ status: 500, message: error });
