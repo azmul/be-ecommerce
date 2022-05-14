@@ -266,6 +266,22 @@ export async function getProductHandler(req: Request, res: Response) {
   }
 }
 
+export async function getProductByUrlHandler(req: Request, res: Response) {
+  const id = req.params.id;
+  try {
+    const product = await Product.findOne({ url: id });
+    if (!product)
+      return res
+        .status(404)
+        .send("The Product with the given id was not found");
+
+    res.status(200).send(product);
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
+  }
+}
+
 export async function updateProductHandler(
   req: IGetUserAuthInfoRequest,
   res: Response

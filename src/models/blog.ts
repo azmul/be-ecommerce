@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 export interface BlogDocument extends mongoose.Document {
   title: string;
+  url: string;
   title_local: string;
   content: string;
   content_local: string;
@@ -20,18 +21,13 @@ export interface BlogDocument extends mongoose.Document {
   updatedAt: Date;
 }
 
-// {
-//   is_approved: false,
-//   customerName: null,
-//   customerPhone: null,
-//   id: number,
-//   comment: string,
-//   createdAt: string
-// }
-
 const blogSchema = new mongoose.Schema(
   {
     title: {
+      type: String,
+      default: null,
+    },
+    url: {
       type: String,
       default: null,
     },

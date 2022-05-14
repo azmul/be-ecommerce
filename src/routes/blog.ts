@@ -14,6 +14,7 @@ import {
   updateBlogHandler,
   updateBlogCommentHandler,
   deleteBlogHandler,
+  getBlogByUrlHandler,
 } from "../controller/blog.controller";
 
 import { createSchema, updateSchema } from "../schema/blog.schema";
@@ -44,6 +45,9 @@ router.get("/admin", admin, asyncHandler(getAdminAllBlogsHandler));
 
 // Get a Blog
 router.get("/:id", asyncHandler(getBlogHandler));
+
+// Get a Blog
+router.get("/details/:id", asyncHandler(getBlogByUrlHandler));
 
 // Create a Blog
 router.post(

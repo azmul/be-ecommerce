@@ -148,6 +148,22 @@ export async function getBlogHandler(req: Request, res: Response) {
   }
 }
 
+export async function getBlogByUrlHandler(req: Request, res: Response) {
+  const id = req.params.id;
+  try {
+    const blog = await Blog.findOne({ url: id });
+    if (!blog)
+      return res
+        .status(404)
+        .send("The blog with the given id was not found");
+
+    res.status(200).send(blog);
+  } catch (err: any) {
+    log.error(err);
+    res.status(400).send({ status: 400, message: err?.message });
+  }
+}
+
 export async function createBlogHandler(
   req: IGetUserAuthInfoRequest,
   res: Response

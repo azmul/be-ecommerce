@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 export interface ProductDocument extends mongoose.Document {
   sku: string;
   name: string;
+  url: string;
   name_local: string;
   price: number;
   discount: number;
@@ -44,6 +45,10 @@ const ProduuctSchema = new mongoose.Schema(
       default: null,
     },
     name: {
+      type: String,
+      default: null,
+    },
+    url: {
       type: String,
       default: null,
     },

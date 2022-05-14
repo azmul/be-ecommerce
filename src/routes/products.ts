@@ -21,6 +21,7 @@ import {
   getProductHandler,
   updateProductHandler,
   deleteProductHandler,
+  getProductByUrlHandler,
 } from "../controller/products.controller";
 
 const router = express.Router();
@@ -89,6 +90,9 @@ router.post(
 
 // Get a Product
 router.get("/:id", asyncHandler(getProductHandler));
+
+// Get a Product By Url
+router.get("/details/:id", asyncHandler(getProductByUrlHandler));
 
 // Update Product
 router.patch(
